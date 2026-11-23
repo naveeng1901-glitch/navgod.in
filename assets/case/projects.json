@@ -1,0 +1,1124 @@
+[
+ {
+  "slug": "kazaar",
+  "title": "Kazaar",
+  "sub": "Monsoon gin, distilled in Assam",
+  "year": "2026",
+  "kind": "Spirits packaging",
+  "format": "750 ml bottle label + gift box, 95 × 95 × 310 mm",
+  "role": "Concept, illustration, label, box, dieline",
+  "lede": "In Assam, rain is not a season. It is a way of life.",
+  "body": [
+   "Kazaar is a premium Indian dry gin from the wetlands of Kaziranga, home of the one-horned rhino. The identity sets luxury against raw nature: a matte black field like a monsoon night, gold botanicals drawn from the region’s wild flora, and a rhino in fine white linework.",
+   "An origami rhino folds the animal into a crisp seal; art-deco letters give the name its bar-shelf presence. The gift box carries the same system at full height, the rhino crossing the front, the botanicals climbing both sides."
+  ],
+  "tone": "dark",
+  "palette": [
+   {
+    "hex": "#060502",
+    "name": "Monsoon black"
+   },
+   {
+    "hex": "#aa8800",
+    "name": "Botanical gold"
+   },
+   {
+    "hex": "#ffcc00",
+    "name": "Gin yellow"
+   },
+   {
+    "hex": "#f9f9f9",
+    "name": "Rhino white"
+   }
+  ],
+  "type": [
+   "Broadway",
+   "Consolas Bold"
+  ],
+  "theme": {
+   "bg": "#0d0c09",
+   "ink": "#f2eee6",
+   "soft": "#a59d8f",
+   "accent": "#c9a227",
+   "card": "#1a1814"
+  },
+  "imgs": [
+   {
+    "src": "m01.jpg",
+    "cap": "Monsoon dusk in the Kaziranga wetlands."
+   },
+   {
+    "src": "m02.jpg",
+    "cap": "Evening, at the home bar."
+   },
+   {
+    "src": "m03.jpg",
+    "cap": "The pour."
+   }
+  ],
+  "structure": [
+   {
+    "src": "s01.jpg",
+    "cap": "Bottle label, flat wrap, 267 × 200 mm."
+   },
+   {
+    "src": "s02.jpg",
+    "cap": "Gift box, every face. Straight tuck end, 350 gsm black board, gold foil on the mark."
+   }
+  ],
+  "brand": [
+   {
+    "src": "b01.jpg",
+    "cap": "The origami rhino folds the animal into a seal; Broadway gives the name its bar-shelf presence."
+   },
+   {
+    "src": "b02.jpg",
+    "cap": "Broadway for the name, Consolas Bold for the field notes."
+   },
+   {
+    "src": "b03.jpg",
+    "cap": "Rhino linework, wild botanicals and the lotus-root pattern."
+   }
+  ],
+  "inuse": [],
+  "closing": {
+   "src": "c01.jpg",
+   "cap": ""
+  }
+ },
+ {
+  "slug": "altura",
+  "title": "Altura",
+  "sub": "Mountain Dip tea",
+  "year": "2026",
+  "kind": "Tea packaging",
+  "format": "Box 130 × 95 × 35 mm, window back, three tag shapes",
+  "role": "Concept, identity, box, die-cut tags",
+  "lede": "A mountain on the horizon of your cup.",
+  "body": [
+   "Altura is a tea brand built on India’s peaks. Each Mountain Dip tea bag hangs from a tag die-cut as a mountain, slotting over the rim so the peak stands on the horizon of the cup while it steeps.",
+   "Three blends, three peaks: Himalayan Green, Nilgiri Sunrise, Kanchenjunga Mist. On the box a window works as a portal; through it you see a single mountain waiting inside."
+  ],
+  "tone": "light",
+  "palette": [
+   {
+    "hex": "#caf0e2",
+    "name": "Peak mint"
+   },
+   {
+    "hex": "#6a5140",
+    "name": "Earth brown"
+   },
+   {
+    "hex": "#b3b597",
+    "name": "Himalayan sage"
+   },
+   {
+    "hex": "#fd955f",
+    "name": "Nilgiri sunrise"
+   },
+   {
+    "hex": "#c1c6da",
+    "name": "Kanchenjunga mist"
+   }
+  ],
+  "type": [
+   "a geometric wordmark",
+   "Corbel"
+  ],
+  "theme": {
+   "bg": "#d6ede4",
+   "ink": "#3a2c22",
+   "soft": "#6f6156",
+   "accent": "#6a5140",
+   "card": "#e9f6f0"
+  },
+  "imgs": [
+   {
+    "src": "m01.jpg",
+    "cap": "The mountain sits on the cup; the box keeps one in its window."
+   },
+   {
+    "src": "m02.jpg",
+    "cap": "Three blends, a small range across the cups."
+   },
+   {
+    "src": "m03.jpg",
+    "cap": "Setting the peak on the rim."
+   }
+  ],
+  "structure": [
+   {
+    "src": "s01.jpg",
+    "cap": "Every face, and the three tags. E-flute board, die-cut window with PET film, hang tab."
+   }
+  ],
+  "brand": [
+   {
+    "src": "b01.jpg",
+    "cap": "Three folded peaks over a wide-tracked wordmark."
+   },
+   {
+    "src": "b02.jpg",
+    "cap": "A geometric wordmark; Corbel for names, story and labels."
+   },
+   {
+    "src": "b03.jpg",
+    "cap": "One mountain per blend: Himalayan Green, Nilgiri Sunrise, Kanchenjunga Mist."
+   }
+  ],
+  "inuse": [],
+  "closing": {
+   "src": "c01.jpg",
+   "cap": ""
+  }
+ },
+ {
+  "slug": "eleftheria",
+  "title": "Eleftheria",
+  "sub": "Cheese factory",
+  "year": "2025",
+  "kind": "Dairy packaging",
+  "format": "Six wedge cartons, 80 mm a side × 50 mm, forming a 160 mm hexagon",
+  "role": "Concept, monogram, structure, cartons",
+  "lede": "Break the word. Share the wheel.",
+  "body": [
+   "Eleftheria is Greek for freedom. There is no outer box: the package is six triangular cartons that sit together as one hexagon, each holding an 83 g wedge. Their tops spell C-H-E-E-S-E around a cream sticker that seals the centre.",
+   "Pull a slice away and the word breaks while the sticker stays. Each carton carries its own letter and a pull tab, so the box comes apart the way the cheese is meant to: shared around the table."
+  ],
+  "tone": "light",
+  "palette": [
+   {
+    "hex": "#fae284",
+    "name": "Butter yellow"
+   },
+   {
+    "hex": "#ccb464",
+    "name": "Rind gold"
+   },
+   {
+    "hex": "#f1ead0",
+    "name": "Cream"
+   },
+   {
+    "hex": "#897535",
+    "name": "Monogram olive"
+   }
+  ],
+  "type": [
+   "Mistral",
+   "Mongolian Baiti",
+   "Corbel"
+  ],
+  "theme": {
+   "bg": "#f6e6a8",
+   "ink": "#3a300f",
+   "soft": "#7a6a35",
+   "accent": "#897535",
+   "card": "#fbf1cd"
+  },
+  "imgs": [
+   {
+    "src": "m01.jpg",
+    "cap": "C-H-E-E-S-E around the sticker."
+   },
+   {
+    "src": "m02.jpg",
+    "cap": "Everyone gets a letter: one wedge slides out, the sticker stays."
+   },
+   {
+    "src": "m03.jpg",
+    "cap": "One wedge, opened."
+   }
+  ],
+  "structure": [
+   {
+    "src": "s01.jpg",
+    "cap": "One wedge carton, flat. Its letter folds up from the outer face; six make the package."
+   },
+   {
+    "src": "s02.jpg",
+    "cap": "The top, assembled: the cream sticker seals all six."
+   }
+  ],
+  "brand": [
+   {
+    "src": "b01.jpg",
+    "cap": "The badge: EE monogram, script name, factory line."
+   },
+   {
+    "src": "b02.jpg",
+    "cap": "Mistral for the name, Mongolian Baiti for the letters, Corbel for labels."
+   },
+   {
+    "src": "b03.jpg",
+    "cap": "Six wedge tops, one letter each: C-H-E-E-S-E."
+   }
+  ],
+  "inuse": [],
+  "closing": {
+   "src": "c01.jpg",
+   "cap": ""
+  }
+ },
+ {
+  "slug": "misty",
+  "title": "Misty Matches",
+  "sub": "25 sticks",
+  "year": "2025",
+  "kind": "Matchbox packaging",
+  "format": "Pocket box 53 × 36 × 15 mm, sleeve and tray",
+  "role": "Lettering, pattern system, sleeve, tray",
+  "lede": "One strike. A pattern per box.",
+  "body": [
+   "Misty Matches takes the pocket matchbox to a 70s disco: chrome inline lettering on neon-pink geometric patterns glowing against black.",
+   "The label is a system, one layout and a family of patterns, from wave scales to octagon lattices, so every box in a pack is different and worth keeping. Hot-pink heads and a pink tray finish the night."
+  ],
+  "tone": "dark",
+  "palette": [
+   {
+    "hex": "#0a0809",
+    "name": "Night black"
+   },
+   {
+    "hex": "#d62860",
+    "name": "Neon pink"
+   },
+   {
+    "hex": "#e22c76",
+    "name": "Hot pink"
+   },
+   {
+    "hex": "#c2c2c2",
+    "name": "Chrome"
+   }
+  ],
+  "type": [
+   "70s Disco",
+   "Vivaldi"
+  ],
+  "theme": {
+   "bg": "#120b0f",
+   "ink": "#f6e9ef",
+   "soft": "#a8909b",
+   "accent": "#e22c76",
+   "card": "#1f1419"
+  },
+  "imgs": [
+   {
+    "src": "m01.jpg",
+    "cap": "One strike."
+   },
+   {
+    "src": "m02.jpg",
+    "cap": "A pattern per box. Collect the set."
+   },
+   {
+    "src": "m03.jpg",
+    "cap": "Light it up."
+   }
+  ],
+  "structure": [
+   {
+    "src": "s01.jpg",
+    "cap": "Sleeve front and back, strikers, tray end and floor."
+   }
+  ],
+  "brand": [
+   {
+    "src": "b01.jpg",
+    "cap": "Chrome inline lettering with a grey extrusion."
+   },
+   {
+    "src": "b02.jpg",
+    "cap": "70s Disco for the name, Vivaldi for the count."
+   },
+   {
+    "src": "b03.jpg",
+    "cap": "The pattern system: one tile per box."
+   }
+  ],
+  "inuse": [],
+  "closing": {
+   "src": "c01.jpg",
+   "cap": ""
+  }
+ },
+ {
+  "slug": "playable",
+  "title": "Playable",
+  "sub": "Clothing",
+  "year": "2025",
+  "kind": "Apparel packaging",
+  "format": "Hanger box 300 × 240 × 50 mm, 388 mm with hook",
+  "role": "Logo, hanger box, swing tag",
+  "lede": "Made to be played in.",
+  "body": [
+   "Playable is a casual label for clothes you live in. The stacked, wobbly wordmark looks mid-jump, in tomato red on raw kraft.",
+   "The tee ships in a hanger box: the board itself is cut as a hanger, with a hook and a handle slot, so it hangs on the rail like the garment inside and carries straight home."
+  ],
+  "tone": "light",
+  "palette": [
+   {
+    "hex": "#9c1717",
+    "name": "Playable red"
+   },
+   {
+    "hex": "#f7f0e4",
+    "name": "Cotton cream"
+   },
+   {
+    "hex": "#ab7c5a",
+    "name": "Kraft"
+   }
+  ],
+  "type": [
+   "a hand-drawn wordmark",
+   "Arial Bold"
+  ],
+  "theme": {
+   "bg": "#c49a78",
+   "ink": "#2a160f",
+   "soft": "#5a3d2c",
+   "accent": "#9c1717",
+   "card": "#d6b394"
+  },
+  "imgs": [
+   {
+    "src": "m01.jpg",
+    "cap": "On the rail, like the tee inside."
+   },
+   {
+    "src": "m02.jpg",
+    "cap": "Carry it."
+   },
+   {
+    "src": "m03.jpg",
+    "cap": "Play in it."
+   }
+  ],
+  "structure": [
+   {
+    "src": "s01.jpg",
+    "cap": "Front, back, gussets, base and swing tag. 2 mm kraft, one colour plus white."
+   }
+  ],
+  "brand": [
+   {
+    "src": "b01.jpg",
+    "cap": "The stacked, wobbly wordmark in cream and in red."
+   },
+   {
+    "src": "b02.jpg",
+    "cap": "The hand-drawn wordmark; Arial Bold for size and care."
+   },
+   {
+    "src": "b03.jpg",
+    "cap": "The red swing tag, front and back."
+   }
+  ],
+  "inuse": [],
+  "closing": {
+   "src": "c01.jpg",
+   "cap": ""
+  }
+ },
+ {
+  "slug": "donut",
+  "title": "Donut Protocol",
+  "sub": "Observe donut",
+  "year": "2025",
+  "kind": "Bakery packaging",
+  "format": "Box 280 × 170 × 80 mm with a standing header",
+  "role": "Concept, copy, box, seal, welcome card",
+  "lede": "Don’t open. Okay fine… open.",
+  "body": [
+   "Donut Protocol treats a half dozen like a ceremony. A tall header stands at the back; the lid is a pair of doors held shut by a sprinkled seal that argues with itself, and a welcome card waits on top.",
+   "Break the seal, open the doors, and six donuts sit in a grid. Every panel speaks in deadpan rules: Observe donut. Appreciate donut. Respect donut."
+  ],
+  "tone": "light",
+  "palette": [
+   {
+    "hex": "#4a3b00",
+    "name": "Olive night"
+   },
+   {
+    "hex": "#74563c",
+    "name": "Cocoa"
+   },
+   {
+    "hex": "#e7a535",
+    "name": "Glaze gold"
+   },
+   {
+    "hex": "#fda6cd",
+    "name": "Strawberry pink"
+   }
+  ],
+  "type": [
+   "Disclaimer",
+   "Playfair Display",
+   "Plateau"
+  ],
+  "theme": {
+   "bg": "#f6d6e1",
+   "ink": "#3f2a1c",
+   "soft": "#7c5d48",
+   "accent": "#74563c",
+   "card": "#fbe7ee"
+  },
+  "imgs": [
+   {
+    "src": "m01.jpg",
+    "cap": "Sealed, at the bakery counter."
+   },
+   {
+    "src": "m02.jpg",
+    "cap": "Okay fine... open."
+   },
+   {
+    "src": "m03.jpg",
+    "cap": "Protocol complete."
+   }
+  ],
+  "structure": [
+   {
+    "src": "s01.jpg",
+    "cap": "Header, lid, doors, welcome card, inside and every wall."
+   }
+  ],
+  "brand": [
+   {
+    "src": "b01.jpg",
+    "cap": "The Donuts header that stands at the back."
+   },
+   {
+    "src": "b02.jpg",
+    "cap": "Disclaimer, Playfair Display and Plateau."
+   },
+   {
+    "src": "b03.jpg",
+    "cap": "Inside: six donuts in a grid."
+   }
+  ],
+  "inuse": [],
+  "closing": {
+   "src": "c01.jpg",
+   "cap": ""
+  }
+ },
+ {
+  "slug": "brain",
+  "cat": "Identity",
+  "title": "Brain 2.0",
+  "sub": "Archives for the future",
+  "year": "2025",
+  "kind": "Stationery identity",
+  "format": "Mark, wordmark and a six-piece stationery range",
+  "role": "Concept, kolam mark, identity system, product range",
+  "lede": "Brains forget. Systems don’t.",
+  "body": [
+   "Brain 2.0 is a stationery brand for people who think on paper. We live in a world full of information, ideas and distractions; brain 2.0 is a quiet space to document, organise and return to.",
+   "Its mark is a pulli kolam, the dot-and-line drawing made fresh every morning on Indian doorsteps: each dot a thought, one continuous line the system that keeps it. Archive beige, matte paper and a thin, lowercase voice keep everything calm."
+  ],
+  "tone": "light",
+  "palette": [
+   {
+    "hex": "#e8e2d6",
+    "name": "Archive beige"
+   },
+   {
+    "hex": "#fdfcfb",
+    "name": "Paper white"
+   },
+   {
+    "hex": "#c7c2b7",
+    "name": "Binder grey"
+   },
+   {
+    "hex": "#75614d",
+    "name": "Kolam brown"
+   },
+   {
+    "hex": "#1a1a1a",
+    "name": "Ink black"
+   }
+  ],
+  "type": [
+   "Cy Grotesk Wide",
+   "Alegreya Sans"
+  ],
+  "theme": {
+   "bg": "#e8e2d6",
+   "ink": "#1a1a1a",
+   "soft": "#6e665c",
+   "accent": "#75614d",
+   "card": "#f3efe7"
+  },
+  "imgs": [
+   {
+    "src": "m01.jpg",
+    "cap": "The range, laid out."
+   },
+   {
+    "src": "m02.jpg",
+    "cap": "Write."
+   },
+   {
+    "src": "m03.jpg",
+    "cap": "Archives for the future."
+   }
+  ],
+  "structure": [
+   {
+    "src": "s01.jpg",
+    "cap": "The logo system: lockups, clear space, minimum sizes."
+   },
+   {
+    "src": "s02.jpg",
+    "cap": "The range, flat and to scale."
+   }
+  ],
+  "brand": [
+   {
+    "src": "b01.jpg",
+    "cap": "The kolam mark: dots joined by one continuous line, with the lowercase wordmark."
+   },
+   {
+    "src": "b02.jpg",
+    "cap": "Cy Grotesk Wide for headlines, Alegreya Sans for the wordmark."
+   },
+   {
+    "src": "b03.jpg",
+    "cap": "The kolam as a repeat."
+   }
+  ],
+  "inuse": [
+   {
+    "src": "u01.jpg",
+    "cap": "Out of the library, the archive on a shoulder.",
+    "a": 0.667
+   },
+   {
+    "src": "u02.jpg",
+    "cap": "Brains forget. Systems don’t.",
+    "a": 0.8
+   }
+  ],
+  "closing": {
+   "src": "c01.jpg",
+   "cap": ""
+  }
+ },
+ {
+  "slug": "forkyeah",
+  "cat": "Identity",
+  "title": "Fork Yeah",
+  "sub": "Food festival, Alcafozes",
+  "year": "2025",
+  "kind": "Festival identity + posters",
+  "format": "Logo, mascot, eight posters and a festival kit",
+  "role": "Lettering, mascot, poster series, festival kit",
+  "lede": "Get forked. Dig in!",
+  "body": [
+   "Fork Yeah is a one-day street-food festival in Alcafozes, Portugal, on Saturday 5 April. The identity is built to be loud and hungry: stacked, jumping letters in four sauces and a fork stabbing through the Y.",
+   "A red parrot mascot that never puts its fork down and a wall of “DIG IN !” run through eight posters that work alone and as a street-wide set, then onto the ticket, the wristband, the stickers and the coasters."
+  ],
+  "tone": "light",
+  "palette": [
+   {
+    "hex": "#d8183c",
+    "name": "Ketchup red"
+   },
+   {
+    "hex": "#f07818",
+    "name": "Grill orange"
+   },
+   {
+    "hex": "#18849c",
+    "name": "Fork teal"
+   },
+   {
+    "hex": "#602490",
+    "name": "Grape purple"
+   },
+   {
+    "hex": "#ecc930",
+    "name": "Sun yellow"
+   }
+  ],
+  "type": [
+   "custom lettering",
+   "Girdo Black"
+  ],
+  "theme": {
+   "bg": "#fbf1dc",
+   "ink": "#22162a",
+   "soft": "#6a5a66",
+   "accent": "#d8183c",
+   "card": "#fff8ea"
+  },
+  "imgs": [
+   {
+    "src": "m01.jpg",
+    "cap": "On the walls of Alcafozes."
+   },
+   {
+    "src": "m02.jpg",
+    "cap": "Dig in!"
+   },
+   {
+    "src": "m03.jpg",
+    "cap": "The kit, at breakfast."
+   }
+  ],
+  "structure": [
+   {
+    "src": "s01.jpg",
+    "cap": "The poster series: eight A2 posters, one street."
+   },
+   {
+    "src": "s02.jpg",
+    "cap": "The festival kit: ticket, wristband, stickers, coaster."
+   }
+  ],
+  "brand": [
+   {
+    "src": "b01.jpg",
+    "cap": "The jumping logo, a fork through the Y."
+   },
+   {
+    "src": "b02.jpg",
+    "cap": "Girdo Black for every shout: dates, places, DIG IN!"
+   },
+   {
+    "src": "b03.jpg",
+    "cap": "The parrot mascot and the menu."
+   }
+  ],
+  "inuse": [
+   {
+    "src": "u01.jpg",
+    "cap": "Wristband on, fries in hand.",
+    "a": 0.667
+   },
+   {
+    "src": "u02.jpg",
+    "cap": "The poster, as a story.",
+    "a": 0.8
+   },
+   {
+    "src": "u03.jpg",
+    "cap": "Ramen, at the truck window.",
+    "a": 1.0
+   }
+  ],
+  "closing": {
+   "src": "c01.jpg",
+   "cap": ""
+  }
+ },
+ {
+  "slug": "ryndia",
+  "cat": "Campaign",
+  "title": "Ryndia Runway",
+  "sub": "Meghalaya, dressed by nature",
+  "year": "2026",
+  "kind": "Integrated campaign, six media",
+  "format": "Meghalaya Tourism, integrated campaign",
+  "role": "Big idea, art direction, all creatives",
+  "lede": "Follow the thread.",
+  "body": [
+   "People come to see Meghalaya: the waterfalls, the root bridges, the caves. Few leave knowing what it makes. Ryndia, the state’s hand-woven Eri silk, now GI-tagged, is worn on runways in Mumbai, Delhi and London, but the hills, the looms and the women who weave it never travel with the cloth.",
+   "So every Ryndia garment becomes a map. The campaign turns the runway into a route: from fashion back to the craft, the culture and the places that made it. Ryndia is the doorway; Meghalaya is the destination. It all leads to one event, Ryndia Runway, an open-air fashion show in the hills in December 2026, where the weavers walk the finale beside the models."
+  ],
+  "imgs": [
+   {
+    "src": "m01.jpg",
+    "a": 1.779,
+    "cap": "The invitation on the Shillong approach, at dusk."
+   }
+  ],
+  "palette": [],
+  "type": [],
+  "brand": [],
+  "structure": [],
+  "insight": "“I love the fabric. I’ve never been where it comes from.”",
+  "audience": [
+   [
+    "Fashion-curious travellers",
+    "Urban Indians, 22 to 40, who travel for experiences and love handloom. One meaningful trip a year, and something real to bring home."
+   ],
+   [
+    "The makers of fashion",
+    "Designers, design students and stylists who travel for inspiration. Their collections carry Meghalaya to everyone else."
+   ],
+   [
+    "Slow-fashion lovers abroad",
+    "Buyers and travellers drawn to natural fibres and peace silk, who want provenance they can verify."
+   ]
+  ],
+  "key": {
+   "src": "k01.jpg",
+   "a": 0.667,
+   "cap": "Key creative: the runway was always here.",
+   "title": "The runway was always here.",
+   "text": "A model walks a rain-wet stone path between bamboo frames hung with woven cloth, mist and waterfalls behind her. No stage, no lights: the land is the runway and the dress is Ryndia. It announces Ryndia Runway, December 2026.",
+   "lines": [
+    [
+     "Headline",
+     "Meghalaya, dressed by nature"
+    ],
+    [
+     "Credit",
+     "She wears Ryndia, handwoven in Umden-Diwon, Ri-Bhoi"
+    ],
+    [
+     "Sign-off",
+     "Come for the show. Stay for the stories."
+    ]
+   ]
+  },
+  "traditional": [
+   {
+    "src": "t01.jpg",
+    "a": 3.001,
+    "cap": "A runway the hills built.",
+    "role": "See",
+    "title": "Outdoor, 48 × 16 ft",
+    "text": "Three hoardings that read like invitations, on Delhi, Mumbai and Bengaluru airport roads and the Guwahati–Shillong highway."
+   },
+   {
+    "src": "t02.jpg",
+    "a": 3.001,
+    "cap": "Every thread has a hometown."
+   },
+   {
+    "src": "t03.jpg",
+    "a": 3.001,
+    "cap": "Walk where Ryndia is woven."
+   },
+   {
+    "src": "t04.jpg",
+    "a": 1.414,
+    "cap": "Feel a place before you see it.",
+    "role": "Touch",
+    "title": "Print, a magazine spread",
+    "text": "The one medium you can touch, so a pinked swatch of real Ryndia is tipped into the page. Vogue India, Condé Nast Traveller, Elle."
+   },
+   {
+    "src": "t05.jpg",
+    "a": 1.5,
+    "cap": "A weaver finishes it live.",
+    "role": "Walk",
+    "title": "Ambient, the unfinished runway",
+    "text": "A runway woven from Ryndia that runs out halfway, its threads leading to a weaver finishing it live. At fashion week and Delhi T3; the QR on the loom says: finish the walk in Meghalaya."
+   }
+  ],
+  "digital": [
+   {
+    "src": "d01.jpg",
+    "a": 1.5,
+    "cap": "followthethread.in",
+    "role": "Follow",
+    "title": "Microsite",
+    "text": "Scrolling unravels one red thread from garment back to cocoon. A code on every Ryndia tag opens its weaver and village; the Thread Trail books the four-day trip."
+   },
+   {
+    "src": "d02.jpg",
+    "a": 1.5,
+    "cap": "Cocoon to catwalk.",
+    "role": "Share",
+    "title": "Reels and Shorts",
+    "text": "Creators wear Ryndia, then follow it home to the village that made it, in three 15-second beats with real location sound. #FollowTheThread."
+   },
+   {
+    "src": "d03.jpg",
+    "a": 1.5,
+    "cap": "Skip the ad. Not the process.",
+    "role": "Watch",
+    "title": "YouTube pre-roll",
+    "text": "The ad people try hardest to skip, so the skip button becomes the message: on the end card, Skip turns into Follow the thread."
+   }
+  ],
+  "world": [
+   {
+    "src": "w01.jpg",
+    "a": 1.5,
+    "cap": "Guwahati–Shillong road."
+   },
+   {
+    "src": "w02.jpg",
+    "a": 1.5,
+    "cap": "Shillong–Sohra road."
+   },
+   {
+    "src": "w03.jpg",
+    "a": 1.5,
+    "cap": "Backlit lightbox, airport arrivals."
+   }
+  ],
+  "series": [
+   {
+    "src": "s01.jpg",
+    "a": 0.667,
+    "cap": "The root bridge."
+   },
+   {
+    "src": "s02.jpg",
+    "a": 0.667,
+    "cap": "The cliff above the falls."
+   },
+   {
+    "src": "s03.jpg",
+    "a": 0.667,
+    "cap": "The pine forest."
+   },
+   {
+    "src": "s04.jpg",
+    "a": 0.667,
+    "cap": "The weaver’s hut."
+   },
+   {
+    "src": "s05.jpg",
+    "a": 0.667,
+    "cap": "The cave."
+   },
+   {
+    "src": "s06.jpg",
+    "a": 0.667,
+    "cap": "The village at dawn."
+   }
+  ],
+  "closing": {
+   "src": "c01.jpg",
+   "a": 1.333,
+   "cap": "Meghalaya."
+  },
+  "show": {
+   "src": "r01.jpg",
+   "a": 1.778,
+   "cap": "Hall 03: the runway ends where the hills begin.",
+   "title": "The runway",
+   "text": [
+    "Every medium leads to one event: Ryndia Runway, an open-air show in the hills in December 2026, where the Umden-Diwon weavers walk the finale beside the models.",
+    "Hall 03 of this museum is that show. The woven runner runs on into the hills, the cloths hang on bamboo as they would on the night, and four looks walk toward you through the rain."
+   ]
+  },
+  "museum": {
+   "src": "r02.jpg",
+   "a": 1.832,
+   "cap": "Beside the catwalk, as the first look passes.",
+   "title": "Walk it here.",
+   "text": []
+  },
+  "theme": {
+   "bg": "#14160f",
+   "ink": "#ece6d9",
+   "soft": "#a59e8d",
+   "accent": "#c4532f",
+   "card": "#1d2018",
+   "paper": "#e9e2d4",
+   "rule": "rgba(236,230,217,.18)"
+  }
+ },
+ {
+  "slug": "currency",
+  "cat": "Redesign",
+  "title": "Currency Redesign",
+  "sub": "The ₹500 note, three ways",
+  "year": "2025",
+  "kind": "Three notes, front and back, at 150 × 66 mm",
+  "format": "A ₹500 note in three directions: futuristic, heritage, nature",
+  "role": "Concept, illustration, layout, security details, type",
+  "lede": "Same note. Three Indias.",
+  "body": [
+   "A banknote is the most printed piece of design in the country, and the one nobody looks at. This redesign rethinks the ₹500 in three directions while keeping what makes it a note: the Gandhi portrait, the bank's promise, the serial numbers, the emblem and a see-through window.",
+   "Futuristic is navy and gold, with Mumbai's skyline in 2050 and a bullet train on the back. Heritage is warm brown, with the Qutub Minar, the Lotus Temple and India Gate. Nature is green, with a Mysore elephant before the palace. Each back carries a line in Hindi: India's future, a new flight."
+  ],
+  "tone": "dark",
+  "palette": [
+   {
+    "hex": "#3d4b66",
+    "name": "Futuristic navy"
+   },
+   {
+    "hex": "#c9a646",
+    "name": "Gold ink"
+   },
+   {
+    "hex": "#8a5a3b",
+    "name": "Heritage brown"
+   },
+   {
+    "hex": "#1f9a3e",
+    "name": "Nature green"
+   },
+   {
+    "hex": "#eef1ea",
+    "name": "Note paper"
+   }
+  ],
+  "type": [
+   "Algerian",
+   "Franklin Gothic Heavy",
+   "Nirmala UI",
+   "Verdana"
+  ],
+  "theme": {
+   "bg": "#1f3a2b",
+   "ink": "#efe7da",
+   "soft": "#a9b8ac",
+   "accent": "#d9b44a",
+   "card": "#27463a"
+  },
+  "imgs": [
+   {
+    "src": "m01.jpg",
+    "cap": "Three notes, one series."
+   },
+   {
+    "src": "m02.jpg",
+    "cap": "Held to the light: the watermark and the see-through window."
+   },
+   {
+    "src": "m03.jpg",
+    "cap": "At the chai stall, where notes actually live."
+   }
+  ],
+  "brand": [
+   {
+    "src": "b01.jpg",
+    "cap": "The seal, the emblem and the ₹500, kept where hands expect them."
+   },
+   {
+    "src": "b02.jpg",
+    "cap": "The bank's name in both scripts, and the numeral."
+   },
+   {
+    "src": "b03.jpg",
+    "cap": "Futuristic: Mumbai, 2050."
+   }
+  ],
+  "structure": [
+   {
+    "src": "s01.jpg",
+    "cap": "Futuristic, front and back."
+   },
+   {
+    "src": "s02.jpg",
+    "cap": "Heritage, front and back."
+   },
+   {
+    "src": "s03.jpg",
+    "cap": "Nature, front and back."
+   }
+  ],
+  "inuse": [],
+  "closing": {
+   "src": "c01.jpg",
+   "cap": ""
+  }
+ },
+ {
+  "slug": "albums",
+  "cat": "Redesign",
+  "title": "Album Covers, Redesigned",
+  "sub": "Four records, re-sleeved",
+  "year": "2025",
+  "kind": "Four 12-inch sleeves, 31.4 cm square",
+  "format": "Four cover redesigns for records I love",
+  "role": "Concept, image making, art direction, lettering",
+  "lede": "One image per record.",
+  "body": [
+   "Four albums from four worlds: Radiohead, Hindi indie, big beat and a sitar raga. Each redesign tries to say the record in a single image you could recognise from across a record shop.",
+   "In Rainbows is a lone figure under a falling rainbow. Beta spins into its Hindi title. Dig Your Own Hole pulls its stripes down a hole. Afternoon Ragas sits Nikhil Banerjee in front of the afternoon sun."
+  ],
+  "tone": "dark",
+  "palette": [
+   {
+    "hex": "#e8483a",
+    "name": "Rainbow red"
+   },
+   {
+    "hex": "#f7a23a",
+    "name": "Afternoon sun"
+   },
+   {
+    "hex": "#2a6fd6",
+    "name": "Night sea"
+   },
+   {
+    "hex": "#0c0b10",
+    "name": "Sleeve black"
+   },
+   {
+    "hex": "#f1ece2",
+    "name": "Paper white"
+   }
+  ],
+  "type": [
+   "Harrington",
+   "Gabriola",
+   "Freestyle Script"
+  ],
+  "theme": {
+   "bg": "#1b181c",
+   "ink": "#efe7da",
+   "soft": "#a39fa6",
+   "accent": "#e8483a",
+   "card": "#25212a"
+  },
+  "imgs": [
+   {
+    "src": "m01.jpg",
+    "cap": "Four sleeves on the shop shelf."
+   },
+   {
+    "src": "m02.jpg",
+    "cap": "Beta, out of its sleeve."
+   },
+   {
+    "src": "m03.jpg",
+    "cap": "Found at the record fair."
+   }
+  ],
+  "brand": [
+   {
+    "src": "b01.jpg",
+    "cap": "In Rainbows: a lone figure under a falling rainbow."
+   },
+   {
+    "src": "b02.jpg",
+    "cap": "Each record keeps its own voice: Harrington, Freestyle Script, Gabriola."
+   },
+   {
+    "src": "b03.jpg",
+    "cap": "Dig Your Own Hole pulls its stripes down a hole."
+   }
+  ],
+  "structure": [
+   {
+    "src": "s01.jpg",
+    "cap": "In Rainbows, Radiohead."
+   },
+   {
+    "src": "s02.jpg",
+    "cap": "Beta, Peter Cat Recording Co."
+   },
+   {
+    "src": "s03.jpg",
+    "cap": "Dig Your Own Hole, The Chemical Brothers."
+   },
+   {
+    "src": "s04.jpg",
+    "cap": "Afternoon Ragas, Nikhil Banerjee."
+   }
+  ],
+  "inuse": [],
+  "closing": {
+   "src": "c01.jpg",
+   "cap": ""
+  }
+ }
+]

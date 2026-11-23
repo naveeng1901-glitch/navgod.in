@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>NavGod</title>
+<meta name="description" content="NavGod: the design museum of Naveen G. Packaging, identity, advertising, editorial, redesign and motion, around a beating heart: CenterPiece, the handmade works.">
+<meta name="theme-color" content="#060202">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,900&family=Playfair+Display:wght@900&family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Inter:wght@200;400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500&family=Fraunces:ital,opsz,wght,SOFT,WONK@1,9..144,400,100,1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/main.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+  "cannon-es": "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"
+} }
+</script>
+</head>
+<body data-state="intro">
+
+<!-- the museum -->
+<canvas id="world" aria-label="NavGod museum, an interactive 3D space"></canvas>
+
+<!-- the oculus eye -->
+<canvas id="intro" aria-hidden="true"></canvas>
+<div id="intro-ui">
+  <h1 class="sr">NavGod: the design museum of Naveen G</h1>
+  <p class="intro-hint">it is watching you <i></i> <b>look into the eye</b> to enter</p>
+  <button id="enter-btn" type="button">Enter the museum <span>→</span></button>
+  <button class="snd intro-snd" type="button" aria-pressed="false">♪ sound <b>off</b></button>
+  <button id="skip" type="button">skip intro →</button>
+  <p id="made-by">website, 3D &amp; motion designed and built by <b>naveen godugupalli</b></p>
+</div>
+
+<!-- HUD -->
+<a id="logo" href="#" aria-label="NavGod, back to the Rotunda">
+  <span class="wm">navg<svg class="o" viewBox="0 0 28 28" aria-hidden="true"><circle class="ring" cx="14" cy="14" r="12.3"/><g class="ball"><circle class="iris" cx="14" cy="14" r="7.8"/><circle class="pupil" cx="14" cy="14" r="3.3"/><circle class="glint" cx="11.6" cy="11.4" r="1.15"/></g><g class="lids"><rect class="lid t" x="0" y="0" width="28" height="14"/><rect class="lid b" x="0" y="14" width="28" height="14"/></g><circle class="rim" cx="14" cy="14" r="12.3"/></svg>d</span>
+  <small>the design museum of Naveen G</small>
+</a>
+
+<nav id="map" aria-label="Museum map">
+  <svg viewBox="-112 -112 224 224"></svg>
+  <span class="map-cap">museum map</span>
+</nav>
+
+<div id="where" aria-live="polite">
+  <small id="where-k"></small>
+  <b id="where-name"></b>
+  <span id="where-hint"></span>
+</div>
+
+<!-- rotunda: turn between the halls -->
+<button id="turn-left" class="turn" type="button" aria-label="Step back">‹</button>
+<button id="turn-right" class="turn" type="button" aria-label="Step forward">›</button>
+<div id="arch-card" aria-live="polite">
+  <small id="ac-k">you are facing</small>
+  <div class="ac-head"><b id="ac-num"></b><h3 id="ac-title"></h3></div>
+  <p id="ac-sub"></p>
+  <div id="ac-thumbs"></div>
+  <div class="ac-actions">
+    <button id="ac-enter" type="button">Enter <span>→</span></button>
+    <button id="ac-heart" type="button">Face the heart ♥</button>
+  </div>
+</div>
+
+<button class="snd hud-snd" type="button" aria-pressed="false" aria-label="Sound">♪ sound <b>off</b></button>
+
+<div id="quick">
+  <button id="index-btn" type="button"><i>☰</i> Skip to the work</button>
+  <button id="tour-btn" type="button"><i>▶</i> Guided tour</button>
+</div>
+
+<!-- the guided tour: walks you work to work, pauses when you touch anything -->
+<div id="tour-bar" hidden>
+  <span class="tb-k">guided tour</span><b id="tb-count"></b><span id="tb-title"></span>
+  <button id="tb-pause" type="button">❚❚ Pause</button><button id="tb-next" type="button">Next →</button><button id="tb-end" type="button" aria-label="End the tour">✕</button>
+  <i id="tb-prog"></i>
+</div>
+
+<!-- first visit: how to move, or let the museum guide you -->
+<div id="coach" hidden role="dialog" aria-label="How to explore">
+  <small>welcome to NavGod</small>
+  <p><b>Drag</b> or <b>← →</b> to turn · <b>click an arch</b> to enter a hall · the heart opens once you have seen them all.</p>
+  <div class="coach-row"><button id="coach-tour" type="button">▶ Start the guided tour</button><button id="coach-free" type="button">I'll explore</button></div>
+</div>
+
+<div id="controls">
+  <button id="back" type="button">← The Rotunda</button>
+  <button id="cleanup" type="button">Clean up the table</button>
+  <button id="to-heart" type="button">The heart · CenterPiece →</button>
+</div>
+
+<div id="mood" role="group" aria-label="Light level">
+  <span>light</span>
+  <button type="button" aria-pressed="false" title="Deep">●</button>
+  <button type="button" aria-pressed="true" title="Ember">●</button>
+  <button type="button" aria-pressed="false" title="Lit">●</button>
+</div>
+
+<div id="quality" role="group" aria-label="Graphics quality">
+  <span>quality</span>
+  <button type="button" data-q="auto">Auto</button>
+  <button type="button" data-q="high">High</button>
+  <button type="button" data-q="low">Fast</button>
+</div>
+
+<div id="gpu-hint" role="status" hidden>
+  <b>You're seeing the light version.</b>
+  <span>Chrome is using your built-in Intel graphics. For the full museum on your NVIDIA card: Windows Settings → System → Display → Graphics → Google Chrome → Options → <em>High performance</em>, then restart Chrome.</span>
+  <button type="button" id="gpu-hint-x" aria-label="Dismiss">×</button>
+</div>
+
+<!-- exhibit: the anatomy of a work -->
+<aside id="exhibit" aria-live="polite">
+  <button id="ex-close" type="button" aria-label="Step back">×</button>
+  <small id="ex-cat"></small>
+  <h2 id="ex-title"></h2>
+  <p id="ex-desc"></p>
+  <ol class="anatomy">
+    <li><b>Brief</b><span>arrives in the art phase</span></li>
+    <li><b>Idea</b><span>arrives in the art phase</span></li>
+    <li><b>Process</b><span>dielines, sketches, tests</span></li>
+    <li><b>Final</b><span>the finished work + mockups</span></li>
+  </ol>
+  <div id="ex-records" hidden><span class="rec-k">put a record on</span><div class="rec-row"></div></div>
+  <div id="ex-pages" hidden><button id="pg-prev" type="button">‹ back</button><span id="pg-label"></span><button id="pg-next" type="button">turn ›</button></div>
+  <button id="ex-view" type="button">View the project <span>→</span></button>
+  <p class="learned"><i></i>the butterfly learned this colour <code id="ex-hex"></code></p>
+  <nav class="ex-nav" aria-label="Walk through the works">
+    <button id="ex-prev" type="button">←</button>
+    <span id="ex-count"></span>
+    <button id="ex-next" type="button"><b id="ex-next-label">Next</b> →</button>
+  </nav>
+</aside>
+
+<!-- how far along the path you are -->
+<div id="journey" aria-hidden="true"><i></i></div>
+
+<!-- a big rolling counter while you walk the works -->
+<div id="big-count" aria-hidden="true"><span class="d"></span><span class="d"></span><i>/</i><b></b></div>
+
+<!-- every project, one click away -->
+<section id="index" role="dialog" aria-modal="true" aria-labelledby="index-title" hidden>
+  <header>
+    <small>NavGod · the collection</small>
+    <h2 id="index-title">All works</h2>
+    <button class="x" id="index-close" type="button" aria-label="Close">×</button>
+  </header>
+  <div id="index-grid"></div>
+</section>
+
+<!-- the project gallery -->
+<section id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lb-title" hidden>
+  <header>
+    <div><small id="lb-cat"></small><h2 id="lb-title"></h2></div>
+    <span id="lb-count"></span>
+    <button id="lb-museum" type="button">See it in the museum</button>
+    <button class="x" id="lb-close" type="button" aria-label="Close">×</button>
+  </header>
+  <div id="lb-stage"><button id="lb-prev" type="button" aria-label="Previous page">‹</button><div id="lb-media"></div><button id="lb-next" type="button" aria-label="Next page">›</button></div>
+  <div id="lb-thumbs"></div>
+</section>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="flash" aria-hidden="true"></div>
+<div id="veil" aria-hidden="true"></div>
+
+<noscript><p class="noscript">NavGod is an interactive museum and needs JavaScript.</p></noscript>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

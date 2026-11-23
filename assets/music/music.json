@@ -1,0 +1,8 @@
+{
+  "packaging": { "file": "highest-in-the-room.mp3", "title": "highest in the room — travis scott" },
+  "identity":  { "file": "dreamcatcher.mp3",        "title": "dreamcatcher — bahramji & maneesh de moor" },
+  "campaigns": { "file": "campaigns.mp3", "title": "song for hall 03" },
+  "editorial": { "file": "editorial.mp3", "title": "song for hall 04" },
+  "redesign":  { "file": "redesign.mp3",  "title": "song for hall 05" },
+  "backroom":  { "file": "backroom.mp3",  "title": "song for the back room" }
+}

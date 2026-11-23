@@ -1,0 +1,11 @@
+NavGod hall music
+-----------------
+1. Put one MP3 per hall in this folder, named exactly:
+   packaging.mp3  identity.mp3  campaigns.mp3  editorial.mp3  redesign.mp3  backroom.mp3
+   (any hall without a file simply stays quiet)
+2. Edit music.json: change each "title" to the song name you want shown,
+   e.g. "dreamcatcher — bahramji". You can also point "file" at a different filename.
+3. Refresh the site, turn sound on, walk into a hall: its song fades in.
+
+Only use tracks you have the right to play. For a public website, use licensed or
+royalty-free music (commercial songs can get the site flagged or taken down).
