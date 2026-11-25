@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#060202">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,900&family=Playfair+Display:wght@900&family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Inter:wght@200;400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,900&family=Playfair+Display:wght@900&family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Inter:wght@200;400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500&family=Fraunces:ital,opsz,wght,SOFT,WONK@1,9..144,400,100,1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/main.css">
 <script type="importmap">
@@ -53,8 +53,10 @@
 </div>
 
 <!-- rotunda: turn between the halls -->
-<button id="turn-left" class="turn" type="button" aria-label="Step back">‹</button>
-<button id="turn-right" class="turn" type="button" aria-label="Step forward">›</button>
+<button id="turn-left" class="turn" type="button" aria-label="Back"><svg class="ink" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path class="ring" d="M24 3.5c11.6-.4 20.6 8.7 20.4 20.3C44.2 35 35.6 44.6 24.2 44.5 12.6 44.4 3.4 35.6 3.6 24 3.8 12.9 12.6 3.9 24 3.5Z"/><path class="chev" d="m27 17-7 7 7 7"/></svg><i class="nl">Back</i></button>
+<button id="turn-right" class="turn" type="button" aria-label="Next"><svg class="ink" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path class="ring" d="M24 3.5c11.6-.4 20.6 8.7 20.4 20.3C44.2 35 35.6 44.6 24.2 44.5 12.6 44.4 3.4 35.6 3.6 24 3.8 12.9 12.6 3.9 24 3.5Z"/><path class="chev" d="m21 17 7 7-7 7"/></svg><i class="nl">Next</i></button>
+<p id="work-sign" aria-hidden="true"></p>
+<p id="guide" role="status" aria-live="polite"></p>
 <div id="arch-card" aria-live="polite">
   <small id="ac-k">you are facing</small>
   <div class="ac-head"><b id="ac-num"></b><h3 id="ac-title"></h3></div>

@@ -35,7 +35,7 @@ if (fromHeart || toRotunda) history.replaceState(null, '', location.pathname + l
 
 // canvases draw text, so the fonts must be ready first
 await Promise.race([
-  Promise.all(['300 80px Fraunces', '500 80px Fraunces', '600 80px Fraunces', '600 40px Inter', '500 40px Inter', '800 80px Inter', 'italic 400 40px "Instrument Serif"', '600 40px "Bodoni Moda"'].map(f => document.fonts.load(f))),
+  Promise.all(['300 80px Fraunces', '500 80px Fraunces', '600 80px Fraunces', '600 40px Inter', '500 40px Inter', '800 80px Inter', 'italic 400 40px "Instrument Serif"', '600 40px "Bodoni Moda"', '500 40px "Bodoni Moda"', '500 40px "Hanken Grotesk"'].map(f => document.fonts.load(f))),
   wait(2500),
 ]).catch(() => {});
 
@@ -70,9 +70,30 @@ const you = el('circle', { r: 3.2, class: 'you' });
 /* ---------- UI hooks the museum calls ---------- */
 const ui = {
   sound,
-  toast(msg) {
-    const t = $('#toast'); t.textContent = msg; t.classList.add('on');
-    clearTimeout(ui._tt); ui._tt = setTimeout(() => t.classList.remove('on'), 4200);
+  toast(msg) { ui.guide(msg); },   // (the old pop-up: every message now speaks through the one guide line)
+  // the guide line: one quiet line at the bottom. It stays as long as it takes to read (about 15 letters a second), or until cleared (ms = 0 keeps it)
+  guide(msg, ms) {
+    const g = $('#guide'); if (!g) return; clearTimeout(ui._gt);
+    if (!msg) { g.classList.remove('on'); return; }
+    const show = () => { g.textContent = msg; g.classList.add('on'); };
+    if (g.classList.contains('on') && g.textContent !== msg) { g.classList.remove('on'); setTimeout(show, 260); } else show();
+    const t = ms ?? Math.max(2600, msg.length / 15 * 1000 + 900);
+    if (t) ui._gt = setTimeout(() => g.classList.remove('on'), t);
+  },
+  // the walking hint: once after you enter, gone at your first step; back (twice at most) if you stand still for 10 s
+  walkHint() { return DEVICE.mobile ? 'Swipe up to walk to the next work' : 'Scroll to walk to the next work'; },
+  entered() { if (ui._hinted) return; ui._hinted = true; ui._waiting = true; setTimeout(() => { if (ui._waiting) ui.guide(ui.walkHint(), 0); }, 1200); },
+  walked() { ui._waiting = false; clearTimeout(ui._idle); if ($('#guide')?.textContent === ui.walkHint()) ui.guide(null); },
+  arrived() { clearTimeout(ui._idle); if ((ui._idleN || 0) >= 2) return;
+    ui._idle = setTimeout(() => { if (museum.paused || document.body.classList.contains('case-open')) return; ui._idleN = (ui._idleN || 0) + 1; ui.guide(ui.walkHint(), 4500); }, 10000); },
+  // under the arrows: where Back and Next lead
+  navLabels(prev, next, atEnd) {
+    const name = n => !n ? '' : n.kind === 'exhibit' ? (WORKS[n.work]?.title || '').split(':')[0] : n.kind === 'heart' ? 'CenterPiece' : n.kind === 'backroom' ? 'Blender & 3D'
+      : n.facing === 'backroom' ? 'Blender & 3D' : (HALLS.find(h => h.id === n.facing)?.title || 'Rotunda');
+    const L = $('#turn-left'), R = $('#turn-right'); if (!L || !R) return;
+    L.classList.toggle('none', !prev); L.querySelector('.nl').textContent = prev ? 'Back' : ''; L.setAttribute('aria-label', prev ? 'Back to ' + name(prev) : 'Back');
+    const nn = atEnd ? (museum.heartOpen ? 'Go in' : '') : name(next);
+    R.classList.toggle('none', !next && !atEnd); R.querySelector('.nl').textContent = nn ? (atEnd ? nn : 'Next: ' + nn) : 'Next'; R.setAttribute('aria-label', nn ? (atEnd ? 'Go into CenterPiece' : 'Next: ' + nn) : 'Next');
   },
   progress(p) {
     window.__loadP = Math.max(window.__loadP || 0, p);
@@ -135,8 +156,10 @@ const ui = {
   },
   exhibit(id) {
     const panel = $('#exhibit');
-    if (!id) { panel.classList.remove('on'); $('#big-count').classList.remove('on'); return; }
+    const ws = $('#work-sign');   // the work's name at the top
+    if (!id) { panel.classList.remove('on'); $('#big-count').classList.remove('on'); ws?.classList.remove('on'); return; }
     const w = WORKS[id];
+    if (ws) { const t = w.title.split(':')[0]; if (ws.textContent !== t) { ws.classList.remove('on'); clearTimeout(ui._ws); ui._ws = setTimeout(() => { ws.textContent = t; ws.classList.add('on'); }, ws.textContent ? 250 : 0); } else ws.classList.add('on'); }
     $('#ex-cat').textContent = w.cat; $('#ex-title').textContent = w.title; $('#ex-desc').textContent = w.desc;
     panel.style.setProperty('--c', w.color);
     $('#ex-hex').textContent = w.color.toUpperCase();

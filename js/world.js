@@ -3218,7 +3218,7 @@ export class Museum {
     return holds.reduce((b, n) => Math.abs(n.d - s) < Math.abs(b.d - s) ? n : b, holds[0]);
   }
   seekTo(node) {   // and how briskly: a glide that turns a lot goes slower, so the turn stays near ~120° a second at most (a person turning round)
-    if (!node) return; const J = this.journey; J.seek = node.d; J.nearT = 0;
+    if (!node) return; const J = this.journey; J.seek = node.d; J.nearT = 0; this.ui.walked?.(); this.navLabels(node.d);
     let turn = 0, prev = null; for (let k = 0; k <= 24; k++) { const at = this.journeyAt(J.s + (node.d - J.s) * k / 24), v = at.look.clone().sub(at.pos), y = Math.atan2(v.x, v.z);
       if (prev != null) turn += Math.abs(Math.atan2(Math.sin(y - prev), Math.cos(y - prev))); prev = y; }
     J.seekW = clamp(217 / Math.max(1, THREE.MathUtils.radToDeg(turn)), 1.1, 2.7);   // the spring's peak turn rate ~ 1.5 · turn · w / e: about 120° a second at most
@@ -3232,10 +3232,15 @@ export class Museum {
     if (dirn > 0 && from >= J.total - .05) return this.endHint();   // the heart never opens from a scroll: only a click, the button or Enter
     this.seekTo(this.holdIndex(from, dirn));
   }
+  navLabels(s) {   // where the Back and Next arrows lead from stop s (written under them)
+    const J = this.journey; if (!J || !this.ui.navLabels) return;
+    const nx = this.holdIndex(s, 1), pv = this.holdIndex(s, -1);
+    this.ui.navLabels(pv && pv.d < s - .3 ? pv : null, nx && nx.d > s + .3 ? nx : null, s >= J.total - .05);
+  }
   endHint() {   // at the last stop: say how to go in (once every few seconds), instead of going in
     const now = performance.now(); if (now - (this._endHintT || 0) < 4000) return; this._endHintT = now;
     if (!this.heartOpen) return this.journeyEnd();
-    this.ui.toast && this.ui.toast(DEVICE.mobile ? 'Tap the heart to go into CenterPiece.' : 'Click the heart, or press Enter, to go into CenterPiece.');
+    this.ui.toast && this.ui.toast(DEVICE.mobile ? 'Tap the heart, or Go in, to enter CenterPiece' : 'Click the heart, Go in, or press Enter to enter CenterPiece');
   }
   journeyGo(dir) {   // scroll / swipe: one stop, and only once the camera has arrived and rested a moment (reversing is always allowed)
     const J = this.journey;
@@ -3277,7 +3282,7 @@ export class Museum {
       for (let k = 0; k < n; k++) { const d = J.seek - J.s; J.gv = clamp((J.gv || 0) + (w * w * d - 2 * w * (J.gv || 0)) * h, -cap, cap); J.s += J.gv * h; }
       if (!J.nearT && Math.abs(J.seek - J.s) < .25) J.nearT = performance.now();
       if (Math.abs(J.seek - J.s) < .004 && Math.abs(J.gv) < .03) { J.s = J.seek; J.seek = null; J.gv = 0; J.arrived = J.nearT || performance.now();
-        if (this.state === 'backroom') this.openHeart(); }   // the heart opens when you STOP in the back room, not when a glide passes through
+        if (this.state === 'backroom') this.openHeart(); this.navLabels(J.s); this.ui.arrived?.(); }   // the heart opens when you STOP in the back room, not when a glide passes through
     } else {
       J.gv = 0; J.s += J.v * dt; J.v *= Math.exp(-dt * 2.2);          // momentum, then it settles (a longer, softer glide)
       if (Math.abs(J.v) < .7) {                             // a soft magnet towards the nearest stop
@@ -3652,7 +3657,8 @@ export class Museum {
     if (this.heartOpen) this.ui.film?.preload(['in', 'hatch', 'spin', 'emerge']);
     this.setPlace('rotunda', 'rotunda', 'The Rotunda', 'drag, scroll or ← → to turn to a hall · ↑ to enter');
     if (this.journey && !this.journey.on) { this.journey.on = true; this.journey.off = false; this.journey.s = this.journeyStartS ?? 0; this.journey.v = 0;
-      this.journey.seek = null; this.journey.gv = 0; this.journey.gest = null; this.journey.arrived = performance.now(); }   // (back from the heart: no old target or half-used scroll left over)
+      this.journey.seek = null; this.journey.gv = 0; this.journey.gest = null; this.journey.arrived = performance.now(); }
+    if (this.journey) this.navLabels(this.journey.s); this.ui.entered?.();   // (back from the heart: no old target or half-used scroll left over)
     this.ring.focus = undefined; this.ring.focusHeart = undefined;
   }
 

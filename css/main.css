@@ -712,3 +712,39 @@ html[data-device] body{-webkit-tap-highlight-color:transparent}
 html[data-device=phone] #enter-btn{bottom:calc(9vh + 92px)}
 html[data-device=phone] .intro-snd{bottom:calc(9vh + 150px)!important}
 html[data-device=phone] #skip{bottom:auto!important;top:calc(env(safe-area-inset-top,0px) + 8px);right:8px}
+
+/* ===== guide + ink arrows (2026-11-25, Naveen picked: the Ink arrows + the Corner-words captions; type = Bodoni Moda + Hanken Grotesk).
+   At a work its name sits at the top (no hall name); the bottom keeps only the case study button. ===== */
+:root{--sans:"Hanken Grotesk","Helvetica Neue",Arial,sans-serif;--italic:"Bodoni Moda",Didot,Georgia,serif;--bodoni:"Bodoni Moda",Didot,"Bodoni 72",Georgia,serif;--halo:0 0 2px rgba(236,232,226,.95),0 0 14px rgba(236,232,226,.85)}
+#toast{display:none!important}
+/* the work's name, at the top like the sign over a door */
+#work-sign{position:fixed;z-index:10;left:50%;top:clamp(14px,2.4vw,30px);transform:translate(-50%,-4px);margin:0;max-width:calc(100vw - 300px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font:500 clamp(26px,2.4vw,38px)/1.1 var(--bodoni);color:#1d1a17;text-shadow:var(--halo);opacity:0;pointer-events:none;transition:opacity .45s ease,transform .45s ease}
+#work-sign.on{opacity:1;transform:translate(-50%,0)}
+body.case-open #work-sign,body.case-open #guide{opacity:0!important}
+#exhibit #ex-title{display:none!important}
+/* the one line of direction */
+#guide{position:fixed;z-index:12;left:50%;bottom:clamp(24px,5vh,48px);transform:translate(-50%,6px);margin:0;width:max-content;max-width:min(34em,calc(100vw - 150px));text-align:center;text-wrap:balance;
+  font:500 clamp(14px,1.05vw,16px)/1.35 var(--sans);letter-spacing:.005em;color:#1d1a17;text-shadow:var(--halo);opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease}
+#guide.on{opacity:1;transform:translate(-50%,0)}
+body[data-state="exhibit"] #guide{bottom:calc(clamp(18px,4vh,40px) + 76px)}
+#exhibit #ex-view{text-transform:none!important;font-family:var(--sans)!important}
+/* Back / Next: a ring of red ink, the arrow inside, where it leads written underneath */
+body.in-museum .turn{width:54px!important;height:54px!important;border:0!important;border-radius:50%;background:none!important;-webkit-backdrop-filter:none;backdrop-filter:none;font-size:0!important;color:#1d1a17;overflow:visible}
+.turn .ink{position:absolute;inset:0;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 6px rgba(236,232,226,.9))}
+.turn .ring{stroke:var(--red);stroke-width:2.2;stroke-linecap:round;transition:stroke-width .25s,transform .5s cubic-bezier(.3,1.4,.5,1);transform-origin:24px 24px}
+.turn .chev{stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.turn .nl{position:absolute;left:50%;top:calc(100% + 6px);transform:translateX(-50%);white-space:nowrap;font:500 12px/1.2 var(--sans);font-style:normal;color:#1d1a17;text-shadow:var(--halo);pointer-events:none}
+.turn:hover .ring,.turn:focus-visible .ring{stroke-width:3;transform:rotate(-14deg)}
+#turn-right:hover .ring,#turn-right:focus-visible .ring{transform:rotate(14deg)}
+body.in-museum .turn:hover,body.in-museum .turn:active{transform:translateY(-50%)!important}
+.turn:focus-visible{outline:2px solid var(--red);outline-offset:4px}
+body.in-museum .turn.none{opacity:.28!important;pointer-events:none!important}
+.turn.none .nl{display:none}
+html[data-device=phone] body.in-museum .turn{width:48px!important;height:48px!important;opacity:1}
+html[data-device=phone] #turn-left{left:8px}html[data-device=phone] #turn-right{right:8px}
+html[data-device=phone] .turn .nl{font-size:11px;max-width:84px;overflow:hidden;text-overflow:ellipsis}
+html[data-device=phone] #work-sign{top:calc(env(safe-area-inset-top,0px) + 62px);font-size:26px;max-width:calc(100vw - 40px)}
+html[data-device=phone] #guide{bottom:calc(env(safe-area-inset-bottom,0px) + 96px);max-width:calc(100vw - 40px);font-size:14px}
+html[data-device=phone] body[data-state="exhibit"] #guide{bottom:calc(env(safe-area-inset-bottom,0px) + 150px)}
+@media (prefers-reduced-motion:reduce){#guide,#work-sign{transform:translateX(-50%)!important;transition:opacity .3s}.turn .ring{transition:none}}
