@@ -4,6 +4,19 @@
    ========================================================= */
 import * as THREE from 'three';
 import { DEVICE, mob, loadFull } from './device.js';
+import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
+import { KTX, KTX_M } from './ktx2-list.js';
+/* KTX2 (2026-11-26): pictures that stay compressed on the graphics card (~8x less memory, no unpacking pause, sharp on phones).
+   tools/make_ktx2.py makes k/<path>.ktx2 (+ km/ for phones when the original is over 2048 px) and the list above.
+   Any picture without a KTX2 copy, or one that fails to load, falls back to the normal picture. ?ktx=0 turns it off (to compare). */
+const KTX_ON = (() => { try { return new URLSearchParams(location.search).get('ktx') !== '0'; } catch (e) { return true; } })();
+const ktxPath = url => { try { const a = new URL(url, location.href); return a.origin === location.origin ? decodeURIComponent(a.pathname.replace(/^\//, '')) : null; } catch (e) { return null; } };
+const ktxUrl = p => (DEVICE.mobile && KTX_M.has(p) ? 'km/' : 'k/') + p + '.ktx2';
+function adoptKTX(t, ct) {   // turn a placeholder texture (already on its materials) into the compressed one, keeping its wrap/repeat/anisotropy
+  t.isCompressedTexture = true; t.image = ct.image; t.mipmaps = ct.mipmaps; t.format = ct.format; t.type = ct.type; t.colorSpace = ct.colorSpace;
+  t.generateMipmaps = false; t.flipY = false; t.minFilter = ct.mipmaps.length > 1 ? THREE.LinearMipmapLinearFilter : THREE.LinearFilter;
+  t.userData.ktx = true; delete t.userData.fullSrc; t.needsUpdate = true;
+}
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
@@ -295,14 +308,24 @@ export class Museum {
     this.hallZ = 0; this.hallZT = 0;
     this.clock = new THREE.Clock();
     this.loader = new THREE.TextureLoader();
+    this.ktx2 = KTX_ON && KTX.size ? new KTX2Loader().setTranscoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis/').setWorkerLimit(DEVICE.mobile ? 2 : 3).detectSupport(this.renderer) : null;
     { // first things first: the Rotunda's own light and the heart load alone; every hall picture waits until they are in (they were all racing it)
       const real = this.loader.load.bind(this.loader), queue = []; this._gate = false;
       const bmp = window.createImageBitmap ? new THREE.ImageBitmapLoader(new THREE.LoadingManager()).setOptions({ imageOrientation: 'flipY', premultiplyAlpha: 'none' }) : null;
       this.loader.load = (url, onLoad, onProg, onErr) => {
+        const kp = this.ktx2 && ktxPath(url), useK = kp && KTX.has(kp);
+        if (useK && this._gate) {   // (after the gate: straight away, as the picture would have been)
+          const t = new THREE.Texture();
+          this.ktx2.load(ktxUrl(kp), ct => { adoptKTX(t, ct); onLoad && onLoad(t); this.idleUpload(t); }, onProg,
+            () => real(url, tt => { t.image = tt.image; t.needsUpdate = true; onLoad && onLoad(t); this.idleUpload(t); }, onProg, onErr));
+          return t;
+        }
         if (this._gate || /bake_(rot|cp)_|centerpiece/.test(url)) return real(url, onLoad, onProg, onErr);
         const t = new THREE.Texture(), pri = hallRank(url); this.prepAdd(); let counted = false; if (DEVICE.mobile && mob(url) !== url) t.userData.fullSrc = url; /* (phones: a lighter copy now, the full one when you stand at it) */ const tick = () => { if (!counted) { counted = true; this.prepTick(); } };
-        if (bmp) { t.flipY = false; queue.push(Object.assign(() => bmp.load(url, img => { t.image = img; t.needsUpdate = true; onLoad && onLoad(t); this.idleUpload(t); tick(); }, onProg, e => { tick(); onErr && onErr(e); }), { pri })); }   // decoded off the main thread, already flipped
-        else queue.push(Object.assign(() => real(url, tt => { t.image = tt.image; t.needsUpdate = true; onLoad && onLoad(t); this.idleUpload(t); tick(); }, onProg, e => { tick(); onErr && onErr(e); }), { pri }));
+        const pic = bmp ? () => { t.flipY = false; bmp.load(url, img => { t.image = img; t.needsUpdate = true; onLoad && onLoad(t); this.idleUpload(t); tick(); }, onProg, e => { tick(); onErr && onErr(e); }); }   // decoded off the main thread
+          : () => real(url, tt => { t.image = tt.image; t.needsUpdate = true; onLoad && onLoad(t); this.idleUpload(t); tick(); }, onProg, e => { tick(); onErr && onErr(e); });
+        if (bmp) t.flipY = false;
+        queue.push(Object.assign(useK ? () => this.ktx2.load(ktxUrl(kp), ct => { adoptKTX(t, ct); onLoad && onLoad(t); this.idleUpload(t); tick(); }, onProg, () => pic()) : pic, { pri }));   // (KTX2 when there is a copy; the picture if it fails)
         if (this._gate) this._pump && this._pump();
         return t;
       };
@@ -509,7 +532,7 @@ export class Museum {
   setArchFont(fam, wt = 600) { Object.assign(this._archFont, { fam, wt }); return document.fonts.load(`${wt} 40px ${fam}`).then(() => this._nameRedraw.forEach(f => f())); }
   keyColours() {   // the keystones take the arcade's own plaster colour, read from the Rotunda bake just above each arch
     if (!this._keys || this._keysCol) return; let rot = null; this.scene.traverse(o => { if (!rot && o.isMesh && o.name === 'rot_shell') rot = o; });
-    const img = rot?.material?.map?.image; if (!img || !img.width) return; this._keysCol = true;
+    const img = this._rotSample?.naturalWidth ? this._rotSample : rot?.material?.map?.userData?.ktx ? null : rot?.material?.map?.image; if (!img || !img.width) return; this._keysCol = true;
     const cv = document.createElement('canvas'); cv.width = 256; cv.height = Math.round(256 * img.height / img.width); const x = cv.getContext('2d', { willReadFrequently: true }); x.drawImage(img, 0, 0, cv.width, cv.height);
     const rc = new THREE.Raycaster(), tint = rot.material.color.clone(), cols = [];
     for (const k of this._keys) { const o = k.position.clone().setY(0).normalize();
@@ -1404,7 +1427,7 @@ export class Museum {
   }
   archLiningColours() {   // each arch's own stone colour, read from the Rotunda bake (bright texels only: the dark seams are what we're covering)
     const L = this._linings; if (!L || this._liningsCol) return; let rot = null; this.scene.traverse(o => { if (!rot && o.isMesh && o.name === 'rot_shell') rot = o; });
-    const img = rot?.material?.map?.image; if (!img || !img.width) return; this._liningsCol = true;
+    const img = this._rotSample?.naturalWidth ? this._rotSample : rot?.material?.map?.userData?.ktx ? null : rot?.material?.map?.image; if (!img || !img.width) return; this._liningsCol = true;
     const cv = document.createElement('canvas'); cv.width = 256; cv.height = Math.round(256 * img.height / img.width); const x = cv.getContext('2d', { willReadFrequently: true }); x.drawImage(img, 0, 0, cv.width, cv.height);
     const rc = new THREE.Raycaster(), tint = rot.material.color.clone();
     for (const m of Object.values(L)) {
@@ -3046,7 +3069,11 @@ export class Museum {
 
   /* the rooms, built and lit in Blender: each mesh wears its own baked light */
   async loadBaked() {
-    this._pre = ['rot_shell', 'rot_floor', 'cp_shell'].map(n => { const i = new Image(); i.crossOrigin = 'anonymous'; i.decoding = 'async'; i.src = mob(`assets/museum/bake_${n}.jpg`); return i; });   // (phones/tablets: the lighter copy)   // the Rotunda's own light starts downloading now, alongside the building
+    const kBake = n => !!(this.ktx2 && KTX.has(`assets/museum/bake_${n}.jpg`));
+    if (kBake('rot_shell')) {   // the arch linings and keystones read their colour from the Rotunda's bake: a KTX2 picture can't be read, so a small copy is kept for that
+      const im = this._rotSample = new Image(), su = 'm/assets/museum/bake_rot_shell.jpg'; im.crossOrigin = 'anonymous'; THREE.DefaultLoadingManager.itemStart(su);
+      im.onload = im.onerror = () => { THREE.DefaultLoadingManager.itemEnd(su); try { this.archLiningColours(); this.keyColours(); } catch (e) {} }; im.src = su; }
+    this._pre = ['rot_shell', 'rot_floor', 'cp_shell'].filter(n => !kBake(n)).map(n => { const i = new Image(); i.crossOrigin = 'anonymous'; i.decoding = 'async'; i.src = mob(`assets/museum/bake_${n}.jpg`); return i; });   // (phones/tablets: the lighter copy)   // the Rotunda's own light starts downloading now, alongside the building
     const gltf = await new GLTFLoader().loadAsync('assets/museum/museum-glb.wasm')   /* .glb is not a servable type on the preview host: same file, served as .wasm */;
     this.mark('building'); await this.hallsBuilt; this.mark('halls built');   // the baked shells are handed to halls that must exist
     const gain = new THREE.Color(1.02, 1.0, .98);   // the greige edition: let the baked tones show, not blow out
@@ -3058,17 +3085,22 @@ export class Museum {
       const isRot = o.name.startsWith('rot_') || o.name.startsWith('cp_');
       if (isRot) rotLeft = (rotLeft || 0) + 1;
       const pre = isRot && this._pre?.find(i => i.src.includes(`/bake_${o.name}.`));   // the Rotunda's light was already downloading: use that copy (asking again fetched every byte twice)
-      let tex;
-      if (pre) { tex = new THREE.Texture(); preJobs.push(new Promise(res => { const done = () => { tex.flipY = false; tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = this.renderer.capabilities.getMaxAnisotropy();   // (set before the upload: an already-loaded image arrives at once, before the lines below run)
+      let tex; const bp = `assets/museum/bake_${o.name}.jpg`, kb = !!(this.ktx2 && KTX.has(bp));
+      if (kb && isRot) { tex = new THREE.Texture();   // the Rotunda's light as KTX2
+        this.ktx2.load(ktxUrl(bp), ct => { adoptKTX(tex, ct); tex.anisotropy = this.renderer.capabilities.getMaxAnisotropy(); try { this.renderer.initTexture(tex); } catch (e) {} if (--rotLeft <= 0) this.openGate(); }, undefined,
+          () => { const t2 = this.loader.load(bp, t => { tex.image = t.image; tex.needsUpdate = true; try { this.renderer.initTexture(tex); } catch (e) {} if (--rotLeft <= 0) this.openGate(); }, undefined, () => this.openGate()); }); }
+      else if (pre) { tex = new THREE.Texture(); preJobs.push(new Promise(res => { const done = () => { tex.flipY = false; tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = this.renderer.capabilities.getMaxAnisotropy();   // (set before the upload: an already-loaded image arrives at once, before the lines below run)
           tex.image = pre; tex.needsUpdate = true; try { this.renderer.initTexture(tex); } catch (e) {} res(); };
         (pre.decode ? pre.decode() : Promise.resolve()).then(done, () => (pre.complete && pre.naturalWidth ? done() : res())); })); rotLeft--; }   // (decoded off the main thread first: uploading an undecoded picture decodes it on the spot)
       else tex = isRot ? this.loader.load(`assets/museum/bake_${o.name}.jpg`, t => { try { this.renderer.initTexture(t); } catch (e) {} if (--rotLeft <= 0) this.openGate(); }, undefined, () => this.openGate()) : new THREE.Texture();
       if (!isRot) this.prepAdd();
-      if (!isRot) later.push(() => new Promise(r => hallLoader.load(`assets/museum/bake_${o.name}.jpg`, img => { this.prepTick();
+      const viaKtx = r => this.ktx2.load(ktxUrl(bp), ct => { this.prepTick(); adoptKTX(tex, ct); tex.anisotropy = this.renderer.capabilities.getMaxAnisotropy(); o.material.userData.loaded = true; this.idleUpload(tex); r(); }, undefined, () => viaPic(r));
+      const viaPic = r => hallLoader.load(`assets/museum/bake_${o.name}.jpg`, img => { this.prepTick();
         tex.image = img; tex.needsUpdate = true; o.material.userData.loaded = true;
         this.idleUpload(tex);   // to the GPU in a quiet moment, not mid-animation
         r();
-      }, undefined, () => { this.prepTick(); r(); })));
+      }, undefined, () => { this.prepTick(); r(); });
+      if (!isRot) later.push(() => new Promise(r => kb ? viaKtx(r) : viaPic(r)));   // (the halls' light: KTX2 when there is a copy)
       tex.flipY = false; tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = this.renderer.capabilities.getMaxAnisotropy();
       const floor = o.name.endsWith('_floor');
       if (o.name === 'rot_shell') {   // the stone sills under the arches sit a hair above the halls' floors and showed through as white dashes: sink them under
