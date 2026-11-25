@@ -81,11 +81,18 @@ const ui = {
     if (t) ui._gt = setTimeout(() => g.classList.remove('on'), t);
   },
   // the walking hint: once after you enter, gone at your first step; back (twice at most) if you stand still for 10 s
-  walkHint() { return DEVICE.mobile ? 'Swipe up to walk to the next work' : 'Scroll to walk to the next work'; },
+  walkHint() { return DEVICE.mobile ? 'Swipe up to walk. The art won\u2019t come to you.' : 'Scroll to walk. The art won\u2019t come to you.'; },
+  idleHint() { return DEVICE.mobile ? 'Still here? Swipe up when you\u2019re ready.' : 'Still here? Scroll when you\u2019re ready.'; },
+  // each instruction says itself once per visit, at the moment it helps
+  once(key, msg, delay = 700) { const s = ui._said || (ui._said = new Set()); if (s.has(key)) return; s.add(key); setTimeout(() => ui.guide(msg), delay); },
+  story(msg) {   // the transformation story: Bodoni italic, a softer voice (null ends it)
+    const g = $('#guide'); if (!g) return; if (!msg) { g.classList.remove('on'); setTimeout(() => g.classList.remove('story'), 400); return; }
+    g.classList.add('story'); ui.guide(msg, 0); },
+  tapWord() { return DEVICE.mobile ? 'tap' : 'click'; },
   entered() { if (ui._hinted) return; ui._hinted = true; ui._waiting = true; setTimeout(() => { if (ui._waiting) ui.guide(ui.walkHint(), 0); }, 1200); },
   walked() { ui._waiting = false; clearTimeout(ui._idle); if ($('#guide')?.textContent === ui.walkHint()) ui.guide(null); },
   arrived() { clearTimeout(ui._idle); if ((ui._idleN || 0) >= 2) return;
-    ui._idle = setTimeout(() => { if (museum.paused || document.body.classList.contains('case-open')) return; ui._idleN = (ui._idleN || 0) + 1; ui.guide(ui.walkHint(), 4500); }, 10000); },
+    ui._idle = setTimeout(() => { if (museum.paused || document.body.classList.contains('case-open')) return; ui._idleN = (ui._idleN || 0) + 1; ui.guide(ui.idleHint(), 4500); }, 10000); },
   // under the arrows: where Back and Next lead
   navLabels(prev, next, atEnd) {
     const name = n => !n ? '' : n.kind === 'exhibit' ? (WORKS[n.work]?.title || '').split(':')[0] : n.kind === 'heart' ? 'CenterPiece' : n.kind === 'backroom' ? 'Blender & 3D'
@@ -115,6 +122,8 @@ const ui = {
     svg.querySelectorAll('[data-room]').forEach(n => n.classList.toggle('here', n.dataset.room === place));
     $('#back').textContent = state === 'exhibit' ? '← Step back' : '← The Rotunda';
     if (state === 'rotunda') ui.onRotunda && ui.onRotunda();
+    if (state === 'backroom') { ui.once('desk', DEVICE.mobile ? 'Pick up anything on the desk. Nothing here breaks.' : 'Drag anything on the desk. Nothing here breaks.', 900);
+      if (museum.desk?.items?.some(it => !it.solid)) ui.once('ghosts', 'Faded things wake up once you\u2019ve visited their hall.', 6500); }
   },
   hover(text, on) { cursor.set(on); cursor.label(DEVICE.mobile ? '' : (text || '')); },   // (touch screens: no floating label under a finger)
   // the card for whatever you are facing in the rotunda
@@ -142,7 +151,8 @@ const ui = {
   },
   grab(on) { body.classList.toggle('grabbing', on); },
   records(on) {   // Hall 05: at the turntable, choose which record plays
-    const el = $('#ex-records'); if (!el) return; el.hidden = !on;
+    const el = $('#ex-records'); if (!el) return; el.hidden = !on; body.classList.toggle('records', !!on);
+    if (on) ui.once('records', 'Pick a record. Volume up is allowed.');
     if (on) { const rp = museum.recordPlayer, row = el.querySelector('.rec-row');
       if (rp && !row.children.length) rp.records.forEach((r, k) => { const b = document.createElement('button'); b.type = 'button'; b.title = `${r.title} · ${r.artist}`; b.setAttribute('aria-label', `Play ${r.title} by ${r.artist}`);
         b.innerHTML = `<img src="assets/wall/albums/sleeve_${r.file}.jpg" alt="">`; b.addEventListener('click', () => rp.play(k)); hoverable(b); row.append(b); });
@@ -151,6 +161,10 @@ const ui = {
   },
   pages(st) {   // at a book in Hall 04: turn by hand (the scroll walks on to the next design)
     const el = $('#ex-pages'); if (!el) return;
+    if (st) { const T = ui.tapWord(), T1 = T[0].toUpperCase() + T.slice(1);
+      if (st.mode === 'covers') ui.once('covers', `${T1} to flip to the other cover.`);
+      else if (st.mode === 'fold') ui.once('fold', `${T1} to unfold it, just like the box does.`);
+      else ui.once('book', `Go on, ${T} the page. It won\u2019t tear.`); }
     el.hidden = !st || st.mode === 'covers'; if (el.hidden) return;
     $('#pg-label').textContent = st.mode === 'fold' ? `unfold · ${st.k + 1} / ${st.K + 1}` : `page ${st.k + 1} / ${st.K + 1}`;
     $('#pg-prev').disabled = st.k <= 0; $('#pg-next').textContent = st.k >= st.K ? 'case study →' : (st.mode === 'fold' ? 'open ›' : 'turn ›');
@@ -160,6 +174,7 @@ const ui = {
     const ws = $('#work-sign');   // the work's name at the top
     if (!id) { panel.classList.remove('on'); $('#big-count').classList.remove('on'); ws?.classList.remove('on'); return; }
     const w = WORKS[id];
+    if (!w.book) ui.once('case', `Curious how it was made? ${ui.tapWord()[0].toUpperCase() + ui.tapWord().slice(1)} Case study.`, 1800);
     if (ws) { const t = w.title.split(':')[0]; if (ws.textContent !== t) { ws.classList.remove('on'); clearTimeout(ui._ws); ui._ws = setTimeout(() => { ws.textContent = t; ws.classList.add('on'); }, ws.textContent ? 250 : 0); } else ws.classList.add('on'); }
     $('#ex-cat').textContent = w.cat; $('#ex-title').textContent = w.title; $('#ex-desc').textContent = w.desc;
     panel.style.setProperty('--c', w.color);

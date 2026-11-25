@@ -3286,7 +3286,7 @@ export class Museum {
   endHint() {   // at the last stop: say how to go in (once every few seconds), instead of going in
     const now = performance.now(); if (now - (this._endHintT || 0) < 4000) return; this._endHintT = now;
     if (!this.heartOpen) return this.journeyEnd();
-    this.ui.toast && this.ui.toast(DEVICE.mobile ? 'Tap the heart, or Go in, to enter CenterPiece' : 'Click the heart, Go in, or press Enter to enter CenterPiece');
+    this.ui.toast && this.ui.toast(DEVICE.mobile ? 'You\u2019ve reached the heart. Tap it to step inside.' : 'You\u2019ve reached the heart. Click it, or press Enter, to step inside.');
   }
   journeyGo(dir) {   // scroll / swipe: one stop, and only once the camera has arrived and rested a moment (reversing is always allowed)
     const J = this.journey;
@@ -3379,7 +3379,7 @@ export class Museum {
   }
   journeyEnd() {
     if (this.heartOpen) { this.journey.off = true; this.state = 'rotunda'; this.enterHeart(); }
-    else this.ui.toast && this.ui.toast(`The heart opens once you have walked the halls (${this.hallsSeen.size} of ${HALLS.length}).`);
+    else this.ui.toast && this.ui.toast(`The heart opens once you\u2019ve seen every hall. ${this.hallsSeen.size} of ${HALLS.length} so far.`);
   }
 
   /* =========================================================
@@ -3645,7 +3645,7 @@ export class Museum {
     this.ceilEye.awaken(TIME.value); this.shaftPulse = 1; this.crownSpin = 1;
     this.ui.sound?.swell?.();
     if (this.state === 'rotunda' && this.ring.focus === 'heart') this.ui.focus(null, true);   // the card now says Enter CenterPiece
-    this.ui.toast && this.ui.toast('The heart is open. CenterPiece awaits you in the Rotunda.');
+    this.ui.toast && this.ui.toast(`The heart is open. ${DEVICE.mobile ? 'Tap' : 'Click'} it to step inside.`);
   }
   /* CenterPiece is a heavy page (all its pictures inline). It loads while you are in the Blender hall, the last room before the heart,
      so going into it later never waits; then it sleeps (its loop paused) until you go in */
@@ -3869,7 +3869,7 @@ export class Museum {
     if (this.busy) return;
     if (!this.heartOpen && !force) {
       this.heartBoost = .6;
-      this.ui.toast && this.ui.toast(`The heart is sealed. It opens after you have walked the halls (${this.hallsSeen.size} of ${HALLS.length} seen).`);
+      this.ui.toast && this.ui.toast(`The heart opens once you\u2019ve seen every hall. ${this.hallsSeen.size} of ${HALLS.length} so far.`);
       return;
     }
     if (LOOM) return this.enterLoom();
@@ -3988,6 +3988,7 @@ export class Museum {
       await this.travel(650, s => { this.loomWormFade = 1 - smooth(s); });
       // 2. your butterfly flies into the circle, just as the film's butterfly flies in
       U.uVid.value = this.vidTex(vIn); vIn.currentTime = 0; await vIn.play().catch(() => {});
+      this.ui.story?.('The butterfly folds its wings.'); const half = (vIn.duration || 5.5) * 500; setTimeout(() => this.ui.story?.('It spins itself a cocoon of silk.'), half);
       { const e = new THREE.Vector3(LOOM_RL, 0, 0).applyMatrix4(this.loomFace.matrixWorld).project(this.camera), m = c.clone().project(this.camera);
         const discPx = Math.hypot((e.x - m.x) * innerWidth / 2, (e.y - m.y) * innerHeight / 2) * 2;
         this.ui.cursorInto ? this.ui.cursorInto(discPx * .42, 750) : this.ui.cursorDive?.(900); }   // your butterfly grows into the film's, in the middle of the ring
@@ -3995,6 +3996,7 @@ export class Museum {
       // 3. it turns back into a cocoon on the ring; the cocoon cracks and the worm drops into the dark
       await this.vidEnd(vIn, .04); await dolly;
       U.uVid.value = this.vidTex(vHatch); vHatch.currentTime = 0; await vHatch.play().catch(() => {});
+      this.ui.story?.('Inside, the digital comes undone.'); setTimeout(() => this.ui.story?.('Out crawls a worm, drawn by hand.'), 1600);
       await this.vidEnd(vHatch, 1.45); vHatch.pause();                  // the worm is out, looking round
       // 4. the display turns to liquid around it; you pass through the surface, into CenterPiece,
       //    where the worm comes in from where you came through and crawls off to its spot to sleep
@@ -4005,6 +4007,7 @@ export class Museum {
         this.loomRings?.forEach((r, i) => { r.scale.setScalar(1 + t * (.55 + i * .2)); r.rotation.z = t * (i ? -1.2 : .8); });
         if (s > .66 && !shown) shown = this.ui.centerpiece?.show({ ripple: true, before: () => this.ui.cpArrive?.() }) || Promise.resolve();
       });
+      this.ui.story?.(null);
       await shown;
       this.paused = true; this.state = 'centerpiece';
       try { if (location.hash !== '#centerpiece') history.pushState({ cp: 1 }, '', '#centerpiece'); } catch (e) {}
@@ -4106,6 +4109,7 @@ export class Museum {
       this.loomRings?.forEach((r, i) => { r.scale.setScalar(1.55 + i * .2); r.rotation.z = i ? -1.2 : .8; });
       this.ui.cpLeave?.(); await new Promise(r => setTimeout(r, 1500));   // CenterPiece's worm wakes and crawls toward you, growing
       U.uVid.value = this.vidTex(vSpin); vSpin.currentTime = 0; await vSpin.play().catch(() => {}); U.uMix.value = 1; this.loomWormFade = 0;
+      this.ui.story?.('The worm curls up to leave.'); setTimeout(() => this.ui.story?.('It wraps itself in silk again.'), 2600);
       if (this.loomWeave) this.loomWeave.paused = true;
       U.uRipC.value.set(.5, .39); U.uRip.value = 1; U.uSuck.value = .75;
       this.ui.centerpiece?.hide({ ripple: true });                        // you pass back out through the surface...
@@ -4115,11 +4119,12 @@ export class Museum {
       U.uRip.value = 0; U.uSuck.value = 0;
       await this.vidEnd(vSpin, .04);
       U.uVid.value = this.vidTex(vEm); vEm.currentTime = 0; await vEm.play().catch(() => {});   // the cocoon cracks; the butterfly climbs out and opens its wings
+      this.ui.story?.('Something stirs inside.'); setTimeout(() => this.ui.story?.('A butterfly flies out, back into the museum.'), 1500);
       await this.vidEnd(vEm, .9);
       const v = c.clone().project(this.camera);                           // it flies out of the ring and becomes your cursor
       this.ui.cursorArrive?.((v.x + 1) / 2 * innerWidth, (1 - v.y) / 2 * innerHeight);
       await this.travel(900, s => { U.uMix.value = 1 - smooth(s); this.loomWormFade = smooth(s); });   // and the ring goes back to making art
-      if (this.loomWeave) this.loomWeave.paused = false; vEm.pause();
+      if (this.loomWeave) this.loomWeave.paused = false; vEm.pause(); setTimeout(() => this.ui.story?.(null), 1400);
       const end = this.ringPose(this.ring.a, 1), from = this.camera.position.clone(), back = d.clone().multiplyScalar(10.5).setY(LOOM_Y + .6);   // back away from the ring first, then round to where you were
       await this.travel(2600, s => { const t = ease(s); this.setCam(this.bezier(from, back, end.pos, t), c.clone().lerp(end.look, smooth(t))); if (s > .5) this.inPav = false; });
       if (this.journey) { this.journeyStartS = this.journey.nodes[this.journey.nodes.length - 2].d; this.journey.on = false; }
@@ -4198,8 +4203,9 @@ export class Museum {
   }
   fovFor(v) {   // a tall screen (phone or tablet held upright) sees only a slot sideways: open the view up (at most 90° tall)
     const a = this.camera.aspect; if (a >= 1) return v;
-    // keep what a laptop (16:10) sees across: a framed work zoomed to 30° stays whole on a phone, not cropped at both sides
-    const t = Math.tan(THREE.MathUtils.degToRad(v / 2)) * 1.6 / a;
+    // keep most of what a laptop (16:10) sees across (1.6 kept all of it, which left the work small over a lot of empty floor on phones;
+    // 1.3 lets the work fill the screen and still keeps framed works whole) (2026-11-26)
+    const t = Math.tan(THREE.MathUtils.degToRad(v / 2)) * 1.3 / a;
     return Math.min(90, Math.max(v, 2 * Math.atan(t) * 180 / Math.PI));
   }
   resize() {

@@ -758,3 +758,52 @@ html[data-device=phone] body[data-state="exhibit"] #guide{bottom:calc(env(safe-a
 #about .ab-sig{font:500 16px/1.3 var(--sans)!important;font-style:normal!important}
 #about .ab-mail{border-bottom:1px solid var(--red);user-select:all}
 #about .ab-hi{font:500 14px/1 var(--sans)!important;letter-spacing:0!important;text-transform:none!important}
+
+/* ===== phones: layout 3 (2026-11-26, his pick) — map stays top-right; Back, Case study, Contact and Next share one bar at the bottom ===== */
+#dock,#dock-contact,#contact-sheet{display:none}
+html[data-device=phone] body.in-museum #dock{display:block;position:fixed;z-index:9;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);height:64px;border-radius:22px;
+  background:rgba(244,240,234,.86);box-shadow:0 2px 12px rgba(17,17,17,.12);pointer-events:none}
+html[data-device=phone] body.case-open #dock,html[data-device=phone] body.case-open #dock-contact{opacity:0;pointer-events:none}
+/* the arrows sit at the two ends of the bar; their labels go (the bar has no room, and the work name is at the top) */
+html[data-device=phone] body.in-museum .turn{top:auto!important;bottom:calc(env(safe-area-inset-bottom,0px) + 18px)!important;transform:none!important;width:48px!important;height:48px!important;z-index:11}
+html[data-device=phone] body.in-museum .turn:hover,html[data-device=phone] body.in-museum .turn:active{transform:none!important}
+html[data-device=phone] #turn-left{left:18px!important}html[data-device=phone] #turn-right{right:18px!important}
+html[data-device=phone] .turn .nl{display:none!important}
+/* Case study and Contact side by side in the middle of the bar */
+html[data-device=phone] #exhibit{left:auto!important;right:calc(50% + 5px)!important;bottom:calc(env(safe-area-inset-bottom,0px) + 22px)!important;transform:none!important;max-width:none!important;padding:0!important;background:none!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;z-index:11}
+html[data-device=phone] #exhibit.on{transform:none!important}
+html[data-device=phone] #exhibit #ex-close{display:none!important}
+html[data-device=phone] #exhibit #ex-view{margin:0!important;padding:0 16px!important;height:40px;font:600 14px/40px var(--sans)!important;white-space:nowrap}
+html[data-device=phone] body.in-museum #dock-contact{display:block;position:fixed;z-index:11;left:calc(50% + 5px);bottom:calc(env(safe-area-inset-bottom,0px) + 22px);height:40px;padding:0 18px;border-radius:999px;
+  background:var(--red);color:#fff;font:600 14px/40px var(--sans);box-shadow:0 2px 8px rgba(200,38,27,.3)}
+html[data-device=phone] body.in-museum:not([data-state="exhibit"]) #dock-contact{left:50%;transform:translateX(-50%)}
+/* Hall 05's record sleeves float just above the bar */
+html[data-device=phone] #exhibit #ex-records{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 84px);justify-content:center}
+html[data-device=phone] body.records #guide{bottom:calc(env(safe-area-inset-bottom,0px) + 160px)!important}
+/* the compass and the credit move into the Contact sheet; the sound note moves up beside the map */
+html[data-device=phone] #compass,html[data-device=phone] #hud-credit,html[data-device=phone] #made-by{display:none!important}
+html[data-device=phone] .hud-snd{position:fixed!important;top:calc(env(safe-area-inset-top,0px) + 14px)!important;right:116px!important;bottom:auto!important;left:auto!important}
+/* the caption line sits just above the bar */
+html[data-device=phone] #guide,html[data-device=phone] body[data-state="exhibit"] #guide{bottom:calc(env(safe-area-inset-bottom,0px) + 88px)!important}
+/* the Contact sheet */
+html[data-device=phone] #contact-sheet:not([hidden]){display:block;position:fixed;inset:0;z-index:70}
+#contact-sheet .cs-dim{position:absolute;inset:0;background:rgba(20,16,12,.38);opacity:0;transition:opacity .3s}
+#contact-sheet .cs-card{position:absolute;left:0;right:0;bottom:0;background:#f4f0ea;border-radius:22px 22px 0 0;padding:10px 22px calc(env(safe-area-inset-bottom,0px) + 22px);
+  box-shadow:0 -8px 24px rgba(0,0,0,.18);display:grid;gap:12px;transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+#contact-sheet.on .cs-dim{opacity:1}#contact-sheet.on .cs-card{transform:none}
+#contact-sheet .cs-grip{width:44px;height:4px;border-radius:9px;background:#cfc6b8;justify-self:center}
+#contact-sheet .cs-head{display:flex;justify-content:space-between;align-items:center}
+#contact-sheet h2{margin:0;font:500 26px/1 var(--bodoni)}
+#contact-sheet .cs-x{width:40px;height:40px;font:400 16px var(--sans);color:#6d655c}
+#contact-sheet p{margin:0;font:400 14px/1.45 var(--sans);color:#6d655c}
+#contact-sheet .cs-row{display:flex;justify-content:space-between;gap:8px;padding:6px 0}
+#contact-sheet .cs-row a{flex:1;display:grid;justify-items:center;gap:6px;font:500 12px/1 var(--sans);color:#1d1a17;text-decoration:none}
+#contact-sheet .cs-row i{width:52px;height:52px;border-radius:50%;background:#ece5da;border:1px solid #d6cdc0;display:grid;place-items:center;color:var(--red)}
+#contact-sheet .cs-row svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+#contact-sheet .cs-row svg .f{fill:currentColor;stroke:none}
+#contact-sheet .cs-mail{font:500 14px var(--sans)!important;color:#1d1a17!important;user-select:all;text-align:center}
+#contact-sheet .cs-credit{font-size:12px!important;text-align:center}
+#contact-sheet .cs-credit b{color:var(--red);font-weight:600}
+/* the story told during the butterfly-to-worm transformation: Bodoni italic, a softer voice than the instructions */
+#guide.story{font:italic 400 clamp(18px,1.6vw,24px)/1.3 var(--bodoni);max-width:min(30em,calc(100vw - 48px))}
+@media (prefers-reduced-motion:reduce){#contact-sheet .cs-card,#contact-sheet .cs-dim{transition:none}}

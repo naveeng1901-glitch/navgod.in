@@ -50,6 +50,28 @@ export function createContact({ museum, body = document.body } = {}) {
   const credit = document.createElement('p'); credit.id = 'hud-credit';
   credit.innerHTML = 'website, 3d &amp; motion by <b>naveen godugupalli</b>'; body.appendChild(credit);
 
+  /* phones (2026-11-26, his pick "layout 3"): a named Contact button in the bottom bar opens a sheet from the bottom,
+     so the four ways to reach him sit in one row and can never fall off the screen (the compass opened off the edge) */
+  const dock = document.createElement('div'); dock.id = 'dock'; dock.setAttribute('aria-hidden', 'true'); body.appendChild(dock);
+  const cbtn = document.createElement('button'); cbtn.id = 'dock-contact'; cbtn.type = 'button'; cbtn.textContent = 'Contact'; body.appendChild(cbtn);
+  const sheet = document.createElement('div'); sheet.id = 'contact-sheet'; sheet.hidden = true; sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-label', 'Contact Naveen');
+  sheet.innerHTML = `<div class="cs-dim"></div><div class="cs-card"><span class="cs-grip"></span>
+    <div class="cs-head"><h2>Contact</h2><button class="cs-x" type="button" aria-label="Close">✕</button></div>
+    <p>Say hi about an internship, a project, or anything you saw in here.</p>
+    <div class="cs-row">${POINTS.map(p => `<a href="${p.href}" target="${p.id === 'mail' ? '_self' : '_blank'}" rel="noopener"><i>${ICON[p.id] || ''}</i><span>${({ whatsapp: 'WhatsApp', mail: 'Mail', insta: 'Instagram', linkedin: 'LinkedIn' })[p.id] || p.label}</span></a>`).join('')}</div>
+    <p class="cs-mail">${MAIL}</p>
+    <p class="cs-credit">website, 3d &amp; motion by <b>naveen godugupalli</b></p></div>`;
+  body.appendChild(sheet);
+  let csY = null;
+  const openSheet = on => { if (on) { sheet.hidden = false; requestAnimationFrame(() => sheet.classList.add('on')); }
+    else { sheet.classList.remove('on'); setTimeout(() => { sheet.hidden = true; }, 320); } };
+  cbtn.addEventListener('click', () => openSheet(true));
+  sheet.querySelector('.cs-dim').addEventListener('click', () => openSheet(false));
+  sheet.querySelector('.cs-x').addEventListener('click', () => openSheet(false));
+  const card = sheet.querySelector('.cs-card');   // swipe the sheet down to close it
+  card.addEventListener('touchstart', e => { csY = e.touches[0].clientY; }, { passive: true });
+  card.addEventListener('touchend', e => { if (csY != null && e.changedTouches[0].clientY - csY > 60) openSheet(false); csY = null; }, { passive: true });
+
   const dial = wrap.querySelector('.cp-dial'), needle = wrap.querySelector('.needle'), label = wrap.querySelector('.cp-label');
   const lb = label.querySelector('b'), ls = label.querySelector('span');
   const pts = [...wrap.querySelectorAll('.cp-pt')];
