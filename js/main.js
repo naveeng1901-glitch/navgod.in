@@ -92,7 +92,8 @@ const ui = {
       : n.facing === 'backroom' ? 'Blender & 3D' : (HALLS.find(h => h.id === n.facing)?.title || 'Rotunda');
     const L = $('#turn-left'), R = $('#turn-right'); if (!L || !R) return;
     L.classList.toggle('none', !prev); L.querySelector('.nl').textContent = prev ? 'Back' : ''; L.setAttribute('aria-label', prev ? 'Back to ' + name(prev) : 'Back');
-    const nn = atEnd ? (museum.heartOpen ? 'Go in' : '') : name(next);
+    let nn = atEnd ? (museum.heartOpen ? 'Go in' : '') : name(next);
+    if (!atEnd && next && next.kind === 'exhibit' && next.work === museum.exhibitObj?.userData?.id) nn = '';   // (another view of the same work: just Next)
     R.classList.toggle('none', !next && !atEnd); R.querySelector('.nl').textContent = nn ? (atEnd ? nn : 'Next: ' + nn) : 'Next'; R.setAttribute('aria-label', nn ? (atEnd ? 'Go into CenterPiece' : 'Next: ' + nn) : 'Next');
   },
   progress(p) {

@@ -748,3 +748,13 @@ html[data-device=phone] #work-sign{top:calc(env(safe-area-inset-top,0px) + 62px)
 html[data-device=phone] #guide{bottom:calc(env(safe-area-inset-bottom,0px) + 96px);max-width:calc(100vw - 40px);font-size:14px}
 html[data-device=phone] body[data-state="exhibit"] #guide{bottom:calc(env(safe-area-inset-bottom,0px) + 150px)}
 @media (prefers-reduced-motion:reduce){#guide,#work-sign{transform:translateX(-50%)!important;transition:opacity .3s}.turn .ring{transition:none}}
+
+/* ===== About, rewritten (2026-11-25): Bodoni for the name and the opening line, Hanken for everything you read ===== */
+#about .ab-lead{font:italic 400 clamp(26px,2.6vw,38px)/1.2 var(--bodoni)!important;letter-spacing:0!important;max-width:18em;text-wrap:balance}
+#about .ab-kicker{font-family:var(--sans)!important}
+#about .ab-body p{font:400 clamp(16px,1.15vw,18px)/1.6 var(--sans)!important;color:rgba(22,18,14,.86)!important}
+#about .ab-facts dt{font:500 13px/1.4 var(--sans)!important;letter-spacing:0!important;text-transform:none!important;color:#7a7168!important}
+#about .ab-facts dd{font:400 clamp(15px,1.1vw,17px)/1.4 var(--sans)!important}
+#about .ab-sig{font:500 16px/1.3 var(--sans)!important;font-style:normal!important}
+#about .ab-mail{border-bottom:1px solid var(--red);user-select:all}
+#about .ab-hi{font:500 14px/1 var(--sans)!important;letter-spacing:0!important;text-transform:none!important}

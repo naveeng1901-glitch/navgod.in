@@ -149,6 +149,19 @@ function textTexture(draw, w = 1024, h = 512, full = false) {
 }
 const SERIF = 'Fraunces, Georgia, serif', SANS = 'Inter, system-ui, sans-serif', ITALIC = '"Instrument Serif", Georgia, serif';
 
+// lettering painted straight onto plinths and walls (2026-11-25, his pick): the name in Bodoni, one line about the idea in Hanken, deep red
+const BODONI = '"Bodoni Moda", Didot, Georgia, serif', HANKEN = '"Hanken Grotesk", "Helvetica Neue", Arial, sans-serif';
+const hookOf = work => work.hook || (work.cat || '').split(' · ').join(', ');
+function letterLabel(work, align, light) {   // light: cream letters for the dark feature walls   // a transparent texture: the words only, no card
+  return textTexture((x, w, hh) => {
+    const X = align === 'right' ? w - 40 : align === 'center' ? w / 2 : 40; x.textAlign = align || 'left';
+    let fs = 118; x.font = `500 ${fs}px ${BODONI}`; while (x.measureText(work.title).width > w - 80 && fs > 60) { fs -= 4; x.font = `500 ${fs}px ${BODONI}`; }
+    x.fillStyle = light ? '#f1e9dc' : '#2a1d12'; x.fillText(work.title, X, 150);
+    x.fillStyle = light ? '#f0a597' : '#8a1b12'; x.font = `500 40px ${HANKEN}`; x.fillText(hookOf(work), X, 230);
+  }, 1024, 330);
+}
+const letterMat = map => new THREE.MeshBasicMaterial({ map, transparent: true, depthWrite: false, color: new THREE.Color(.92, .9, .88) });
+
 function placeholderArt(work, aspect) {
   const w = 1024, h = Math.round(1024 / aspect);
   return textTexture((x) => {
@@ -755,7 +768,7 @@ export class Museum {
 
     // a second strip of tape crosses it in a slow wave: white tape, red words
     const c2 = document.createElement('canvas'), y2 = c2.getContext('2d');
-    const phrase = 'packaging  ·  identity  ·  campaigns  ·  editorial  ·  redesign  ·  made by naveen godugupalli  ·  ', f2 = `700 150px ${SANS}`; y2.font = f2;
+    const phrase = 'designed, built and painted by naveen godugupalli  ·  ', f2 = `700 150px ${SANS}`; y2.font = f2;
     const pw = Math.ceil(y2.measureText(phrase).width);
     c2.width = pw; c2.height = 220; y2.fillStyle = '#fbfaf7'; y2.fillRect(0, 0, pw, 220);
     y2.fillStyle = '#c8261b'; y2.font = f2; y2.textBaseline = 'middle'; y2.fillText(phrase, 0, 116);
@@ -1586,7 +1599,6 @@ export class Museum {
         x.textAlign = 'center';
         x.fillStyle = '#c8261b'; x.font = `600 ${hh * .1}px ${SANS}`; x.fillText(`hall ${h.num}`, w / 2, hh * .2);
         x.fillStyle = '#111'; x.font = `800 ${hh * .34}px ${SANS}`; x.letterSpacing = `${-hh * .015}px`; x.fillText(h.title.toLowerCase().split(' ')[0], w / 2, hh * .55);
-        x.letterSpacing = '0px'; x.font = `500 ${hh * .09}px ${SANS}`; x.fillStyle = '#555'; x.fillText(h.title.toLowerCase(), w / 2, hh * .8);
       }, 1024, 372),
     }));
     title.position.set(0, 3.15, L / 2 + .3); title.rotation.y = Math.PI;   // (replaced by the red end wall below)
@@ -1674,11 +1686,7 @@ export class Museum {
     cone.position.set(0, fh / 2 + 1.5, 1.0); cone.rotation.x = -.38;   // (not added: invisible on white, costly to draw)
     const pool = new THREE.Mesh(new THREE.PlaneGeometry(fw * 1.9, fh * 1.9), poolMaterial('#ffe9d6', .14)); pool.position.z = -.03;
     // museum label
-    const label = new THREE.Mesh(new THREE.PlaneGeometry(1.3, .42), new THREE.MeshBasicMaterial({ color: new THREE.Color(.42, .4, .38), map: textTexture((x, w, hh) => {
-      x.fillStyle = '#efe6d6'; x.fillRect(0, 0, w, hh);
-      x.fillStyle = '#1a0d0b'; x.font = `500 74px ${SERIF}`; x.fillText(work.title.length > 20 ? work.title.slice(0, 19) + '…' : work.title, 40, 120);
-      x.fillStyle = '#c3261b'; x.font = `600 34px ${SANS}`; x.fillText(work.cat.toUpperCase(), 42, 190);
-    }, 1024, 330) }));
+    const label = new THREE.Mesh(new THREE.PlaneGeometry(1.3, .42), letterMat(letterLabel(work, 'right')));   // lettered on the wall, right-aligned to the frame's edge
     label.position.set(fw / 2 - .55, -fh / 2 - .5, .03); if (artIn(hall.def.id)) f.add(label);
     // (wall lettering returns with the mockups)
     art.userData = { type: 'work', id, hallId: hall.def.id, frame: f, mat, size: [fw, fh], z };
@@ -1727,11 +1735,7 @@ export class Museum {
       if (work.wall.vinyl) sleeveVinyl(this, f, p, p.file);   // the record peeks out of its sleeve and turns
     });
     // one museum label for the whole wall, under the bottom-right corner
-    const label = new THREE.Mesh(new THREE.PlaneGeometry(1.3, .42), new THREE.MeshBasicMaterial({ color: new THREE.Color(.42, .4, .38), map: textTexture((x, w, hh) => {
-      x.fillStyle = '#efe6d6'; x.fillRect(0, 0, w, hh);
-      x.fillStyle = '#1a0d0b'; x.font = `500 74px ${SERIF}`; x.fillText(work.title, 40, 120);
-      x.fillStyle = '#c3261b'; x.font = `600 34px ${SANS}`; x.fillText(work.cat.toUpperCase(), 42, 190);
-    }, 1024, 330) }));
+    const label = new THREE.Mesh(new THREE.PlaneGeometry(1.3, .42), letterMat(letterLabel(work, 'right', true)));   // lettered on the wall (the feature walls are dark: cream letters)
     label.position.set(cw / 2 - .65, -ch / 2 - .42, .03); f.add(label);
     const hero = meshes[0];
     hall.exhibits.push(hero); this.frames.push(hero);
@@ -2608,11 +2612,7 @@ export class Museum {
     } else if (art) p.add(obj);
     const cone = new THREE.Mesh(new THREE.CylinderGeometry(.1, .75, 3.6, 32, 1, true), coneMaterial()); cone.position.y = 3.4;
     const pool = new THREE.Mesh(new THREE.CircleGeometry(1.4, 40), poolMaterial('#ffe9d6', .22)); pool.rotation.x = -Math.PI / 2; pool.position.y = .01;
-    const label = new THREE.Mesh(new THREE.PlaneGeometry(.86, .28), new THREE.MeshBasicMaterial({ color: new THREE.Color(.42, .4, .38), map: textTexture((c, w, hh) => {
-      c.fillStyle = '#efe6d6'; c.fillRect(0, 0, w, hh);
-      c.fillStyle = '#1a0d0b'; c.font = `500 80px ${SERIF}`; c.fillText(work.title, 40, 130);
-      c.fillStyle = '#c3261b'; c.font = `600 36px ${SANS}`; c.fillText(work.cat.toUpperCase(), 42, 200);
-    }, 1024, 330) }));
+    const label = new THREE.Mesh(new THREE.PlaneGeometry(.86, .28), letterMat(letterLabel(work, 'center')));   // painted straight onto the plinth, centred
     label.position.set(-side * .501, .78, 0); label.rotation.y = -side * Math.PI / 2; if (artIn(hall.def.id)) p.add(label);
 
     const hit = new THREE.Mesh(new THREE.BoxGeometry(1.15, 2.3, 1.15), new THREE.MeshBasicMaterial({ visible: false }));

@@ -135,20 +135,19 @@ export function createContact({ museum, body = document.body } = {}) {
     <h2 class="sr">NavGod: Naveen Godugupalli</h2>
     <div class="ab-in">
       <p class="ab-kicker">About</p>
-      <p class="ab-lead">Hi, I’m Naveen.</p>
-      <p class="ab-why">I make things you can hold, read and walk through.</p>
+      <p class="ab-lead">I make things you can hold, read and walk through.</p>
       <div class="ab-body">
-        <p>I’m a visual communication student at École Intuit Lab in Mumbai. I design packaging, brand identities, campaigns and books, and I paint by hand.</p>
-        <p>This site is a small museum of my work, and I designed and built it myself: the 3D halls, the motion and the way you walk through it. Each hall holds one kind of project, Blender &amp; 3D lives in the back room, and right at the centre is <b>CenterPiece</b>, where my handmade paintings hang. Scroll to walk, and click any work to open its story.</p>
+        <p>I’m Naveen Godugupalli, a visual communication student at École Intuit Lab in Mumbai. I design packaging, brand identities, campaigns and books, and I paint by hand.</p>
+        <p>I like work built on one clear idea you can feel: a tea bag shaped like a mountain, a matchbox you want to collect, a donut box with a sense of humour.</p>
+        <p>NavGod is just my name cut in two, nav·een god·ugupalli, so I built it a museum. I designed and coded every room myself.</p>
+        <p>I’m looking for an internship where I can learn from real briefs and make work people remember.</p>
         <dl class="ab-facts">
           <div><dt>Based in</dt><dd>Mumbai, India</dd></div>
           <div><dt>Studying</dt><dd>Visual Communication, École Intuit Lab</dd></div>
-          <div><dt>I make</dt><dd>Packaging · Identity · Campaigns · Editorial · 3D · Painting</dd></div>
-          <div><dt>Also</dt><dd>Websites · Motion · Interactive 3D, like this one</dd></div>
-          <div><dt>Tools</dt><dd>Illustrator · InDesign · Figma · Blender · AI tools</dd></div>
+          <div><dt>I make</dt><dd>Packaging, identity, campaigns, editorial, 3D, painting</dd></div>
           <div><dt>Open to</dt><dd>Internships and freelance work</dd></div>
         </dl>
-        <p class="ab-sig">Take your time walking around, and say hi when you’re done.</p>
+        <p class="ab-sig"><span class="ab-mail">${MAIL}</span></p>
         <button class="ab-hi" type="button">say hi <span>→</span></button>
       </div>
     </div>`;
