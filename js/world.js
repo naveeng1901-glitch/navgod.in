@@ -795,14 +795,24 @@ export class Museum {
   buildFloorNumbers() {
     for (const h of [...HALLS, BACKROOM]) {
       const a = angleOf(h.k);
+      // a brass inlay set into the stone (2026-11-25, his pick): a ring, the number and the hall's name all in brass, cut slightly into the floor.
+      // Drawn once into the texture (light from the heart side), so it costs nothing per frame: no lights, no reflections.
       const tex = textTexture((x, w, hh) => {
-        x.fillStyle = '#111'; x.textAlign = 'center';
-        x.font = `800 ${hh * .62}px ${SANS}`; x.letterSpacing = `${-hh * .03}px`;
-        x.fillText(h === BACKROOM ? '06' : h.num, w / 2, hh * .62);
-        x.letterSpacing = '0px'; x.fillStyle = '#c8261b'; x.font = `700 ${hh * .13}px ${SANS}`;
-        x.fillText((h === BACKROOM ? 'blender & 3d' : h.title).toLowerCase(), w / 2, hh * .86);
+        const cx = w / 2, cy = hh / 2, brass = (y0, y1) => { const g = x.createLinearGradient(0, y0, 0, y1);
+          g.addColorStop(0, '#f1d89a'); g.addColorStop(.35, '#c9a256'); g.addColorStop(.6, '#9b7432'); g.addColorStop(1, '#d6b46e'); return g; };
+        // the ring: a dark cut, then the brass, then a lit edge
+        x.lineWidth = w * .038; x.strokeStyle = 'rgba(40,28,14,.55)'; x.beginPath(); x.arc(cx, cy + 3, w * .445, 0, Math.PI * 2); x.stroke();
+        x.lineWidth = w * .03; x.strokeStyle = brass(cy - w * .47, cy + w * .47); x.beginPath(); x.arc(cx, cy, w * .445, 0, Math.PI * 2); x.stroke();
+        x.lineWidth = 2; x.strokeStyle = 'rgba(255,240,205,.7)'; x.beginPath(); x.arc(cx, cy, w * .432, Math.PI * 1.05, Math.PI * 1.95); x.stroke();
+        x.lineWidth = w * .006; x.strokeStyle = brass(cy - w * .4, cy + w * .4); x.beginPath(); x.arc(cx, cy, w * .395, 0, Math.PI * 2); x.stroke();
+        // the number and the name, inlaid: a dark cut under each letter, the brass on top
+        const inlay = (txt, font, y, track) => { x.font = font; x.textAlign = 'center'; x.letterSpacing = track;
+          x.fillStyle = 'rgba(40,28,14,.5)'; x.fillText(txt, cx, y + 4); x.fillStyle = brass(y - hh * .45, y + hh * .05); x.fillText(txt, cx, y); };
+        inlay(h === BACKROOM ? '06' : h.num, `800 ${hh * .46}px ${SANS}`, hh * .6, `${-hh * .02}px`);
+        inlay((h === BACKROOM ? 'blender & 3d' : h.title).toLowerCase(), `700 ${hh * .062}px ${SANS}`, hh * .74, `${hh * .004}px`);
+        x.letterSpacing = '0px';
       }, 1024, 1024);
-      const m = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 3.4), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, opacity: .9 }));
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 3.4), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, opacity: .96 }));
       m.rotation.x = -Math.PI / 2;
       const g = new THREE.Group(); g.add(m); g.rotation.y = a + Math.PI;            // reads upright from the heart, looking out at the arch
       g.position.copy(dir(a).multiplyScalar(9.6)).setY(.012); this.scene.add(g);
