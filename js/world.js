@@ -3218,32 +3218,50 @@ export class Museum {
     return holds.reduce((b, n) => Math.abs(n.d - s) < Math.abs(b.d - s) ? n : b, holds[0]);
   }
   seekTo(node) {   // and how briskly: a glide that turns a lot goes slower, so the turn stays near ~120° a second at most (a person turning round)
-    if (!node) return; const J = this.journey; J.seek = node.d;
+    if (!node) return; const J = this.journey; J.seek = node.d; J.nearT = 0;
     let turn = 0, prev = null; for (let k = 0; k <= 24; k++) { const at = this.journeyAt(J.s + (node.d - J.s) * k / 24), v = at.look.clone().sub(at.pos), y = Math.atan2(v.x, v.z);
       if (prev != null) turn += Math.abs(Math.atan2(Math.sin(y - prev), Math.cos(y - prev))); prev = y; }
     J.seekW = clamp(217 / Math.max(1, THREE.MathUtils.radToDeg(turn)), 1.1, 2.7);   // the spring's peak turn rate ~ 1.5 · turn · w / e: about 120° a second at most
   }
-  journeyStep(dirn) {   // to the next (or previous) design; from where the glide is heading, so quick presses queue up
-    const J = this.journey, from = J.seek ?? J.s;
-    if (dirn > 0 && from >= J.total - .05) return this.journeyEnd();
+  journeyStep(dirn, queue) {   // to the next (or previous) stop. Scroll and swipe go from where the camera IS; buttons and keys may queue one stop ahead
+    const J = this.journey, moving = J.seek != null, back = moving && Math.sign(J.seek - J.s) !== dirn;
+    if (moving && back) return this.seekTo(this.holdIndex(J.s - dirn * .3, dirn));   // reversing mid-glide: the stop just behind the camera
+    const near = moving && Math.abs(J.seek - J.s) < .25;   // the last few cm of an arrival count as arrived
+    let from = near ? J.seek : J.s;
+    if (moving && !near) { if (!queue || this.holdIndex(J.s, dirn).d !== J.seek) return; from = J.seek; }   // (one queued stop at most)
+    if (dirn > 0 && from >= J.total - .05) return this.endHint();   // the heart never opens from a scroll: only a click, the button or Enter
     this.seekTo(this.holdIndex(from, dirn));
   }
-  journeyWheel(dy) {   // a small scroll takes you to the next stop, never past it; only a hard, fast scroll goes further
-    const J = this.journey, now = performance.now(), g = J.gest || (J.gest = { t: 0, t0: 0, acc: 0, steps: 0, dir: 0, last: 0, hi: 0, lo: 0 });
+  endHint() {   // at the last stop: say how to go in (once every few seconds), instead of going in
+    const now = performance.now(); if (now - (this._endHintT || 0) < 4000) return; this._endHintT = now;
+    if (!this.heartOpen) return this.journeyEnd();
+    this.ui.toast && this.ui.toast(DEVICE.mobile ? 'Tap the heart to go into CenterPiece.' : 'Click the heart, or press Enter, to go into CenterPiece.');
+  }
+  journeyGo(dir) {   // scroll / swipe: one stop, and only once the camera has arrived and rested a moment (reversing is always allowed)
+    const J = this.journey;
+    const rest = performance.now() - (J.seek != null ? (J.nearT || Infinity) : (J.arrived || 0));   // ms since it (nearly) arrived
+    if (J.seek != null && Math.sign(J.seek - J.s) !== dir) return this.journeyStep(dir);   // reversing: always
+    if (!(rest >= 350)) return;
+    this.journeyStep(dir);
+  }
+  journeyWheel(dy, ts = performance.now(), mom) {   // one scroll gesture = one stop. A trackpad flick sends 40+ events over 2-3 s; its fading tail never adds a step
+    const J = this.journey, g = J.gest || (J.gest = { t: -1e9, dir: 0, acc: 0, used: true, la: 0, hi: 0, lo: 0 });
     const dir = Math.sign(dy), a = Math.abs(dy); if (!dir) return;
-    // a new gesture: a pause, a change of direction, or a fresh swipe that starts while the last one's trackpad momentum is still trickling in
-    // (momentum only ever fades: a sudden rise in speed means the fingers moved again)
-    const fresh = g.steps && now - g.last > 250 && g.lo < g.hi * .6 && a > g.lo * 1.5 + 8;   // it had faded well below its peak, and now it rises again
-    if (now - g.t > 280 || dir !== g.dir || fresh) { g.acc = 0; g.steps = 0; g.t0 = now; g.hi = 0; g.lo = 0; }
-    g.t = now; g.dir = dir; g.acc += a;
-    if (a >= g.hi) { g.hi = a; g.lo = a; } else g.lo = Math.min(g.lo, a);
-    // the momentum tail never adds a second step: extra steps only for a hard scroll in its first 0.5 s
-    const need = g.steps ? 24 + g.steps * 2200 : (now - g.last < 700 ? 70 : 24);   // (a firm trackpad swipe stays one step; only a fast spin of the wheel skips)
-    if (g.acc >= need && (!g.steps || now - g.t0 < 500)) { g.steps++; g.last = now; this.journeyStep(dir); }
+    const gap = ts - g.t;
+    // a new gesture: a change of direction, a long pause, a wheel notch after a short pause, or a rise after the fade (momentum only fades;
+    // fingers moving again push harder). Chrome's own momentum flag, where it exists, overrules all of this.
+    const fresh = mom !== true && (dir !== g.dir || gap > 600 || (gap > 250 && a >= 20 && a >= g.la) || (g.lo < g.hi * .5 && a > g.lo * 2 + 12));
+    g.t = ts; g.la = a;
+    if (fresh) { g.dir = dir; g.acc = 0; g.used = false; g.hi = a; g.lo = a; }
+    else if (a >= g.hi) { g.hi = a; g.lo = a; } else g.lo = Math.min(g.lo, a);
+    if (g.used) return;
+    g.acc += a; if (g.acc < 24) return;
+    g.used = true;   // the rest of this gesture is spent, whatever happens
+    this.journeyGo(dir);
   }
   navStep(d) {   // the on-screen arrows and the arrow keys: one step forward (+1) or back (-1), whatever you are doing
     if (this.paused) return;
-    if (this.journey?.on && !this.journey.off) { if (d > 0 && this.journey.s >= this.journey.total - .05) this.journeyEnd(); else this.journeyStep(d); return; }
+    if (this.journey?.on && !this.journey.off) { if (d > 0 && this.journey.seek == null && this.journey.s >= this.journey.total - .05) this.journeyEnd(); else this.journeyStep(d, true); return; }
     if (this.state === 'rotunda') this.turn(d);
     else if (this.state === 'hall') d > 0 ? this.nextInHall() : this.goRotunda();
     else if (this.state === 'exhibit') this.stepWork(d);
@@ -3257,7 +3275,9 @@ export class Museum {
       let degPerM = 0, yp = y1; for (let k = 1; k <= 8; k++) { const y2 = yawAt(J.s + k * .1 * sg); degPerM = Math.max(degPerM, Math.abs(Math.atan2(Math.sin(y2 - yp), Math.cos(y2 - yp))) * 57.3 / .1); yp = y2; }   // the sharpest turn in the next 80 cm, 10 cm at a time
       const cap = Math.min(7, Math.max(.6, 120 / Math.max(1e-3, degPerM)));
       for (let k = 0; k < n; k++) { const d = J.seek - J.s; J.gv = clamp((J.gv || 0) + (w * w * d - 2 * w * (J.gv || 0)) * h, -cap, cap); J.s += J.gv * h; }
-      if (Math.abs(J.seek - J.s) < .004 && Math.abs(J.gv) < .03) { J.s = J.seek; J.seek = null; J.gv = 0; }
+      if (!J.nearT && Math.abs(J.seek - J.s) < .25) J.nearT = performance.now();
+      if (Math.abs(J.seek - J.s) < .004 && Math.abs(J.gv) < .03) { J.s = J.seek; J.seek = null; J.gv = 0; J.arrived = J.nearT || performance.now();
+        if (this.state === 'backroom') this.openHeart(); }   // the heart opens when you STOP in the back room, not when a glide passes through
     } else {
       J.gv = 0; J.s += J.v * dt; J.v *= Math.exp(-dt * 2.2);          // momentum, then it settles (a longer, softer glide)
       if (Math.abs(J.v) < .7) {                             // a soft magnet towards the nearest stop
@@ -3265,7 +3285,7 @@ export class Museum {
       }
     }
     if (J.s <= 0 && J.v < 0) J.v = 0;
-    if (J.s >= J.total) { J.s = J.total; if (J.v > 3 || (J.seek == null && J.pushEnd)) { J.v = 0; this.journeyEnd(); } }
+    if (J.s >= J.total) { J.s = J.total; J.v = 0; }   // (the heart is entered only on purpose: journeyEnd from a click, the button or Enter)
     J.s = clamp(J.s, 0, J.total);
     const at = this.journeyAt(J.s);
     this.goalPos.copy(at.pos);
@@ -3351,7 +3371,7 @@ export class Museum {
     });
     c.addEventListener('pointerdown', e => {
       this.ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
-      down = { x: e.clientX, y: e.clientY, lx: e.clientX, ly: e.clientY, moved: false };
+      down = { x: e.clientX, y: e.clientY, lx: e.clientX, ly: e.clientY, moved: false, t0: performance.now() };
       c.setPointerCapture(e.pointerId);
       if (this.state === 'backroom') {
         this.ray.setFromCamera(this.ndc, this.camera);
@@ -3360,7 +3380,12 @@ export class Museum {
     });
     c.addEventListener('pointerup', e => {
       if (!down) return;
-      if (this.journey?.on && !this.journey.off && down.moved && !down.grab && e.pointerType !== 'mouse') this.journeyWheel((down.y - e.clientY) * 6);
+      if (this.journey?.on && !this.journey.off && down.moved && !down.grab && e.pointerType !== 'mouse') {   // a swipe: one stop, on its main direction only
+        const dx = e.clientX - down.x, dy = down.y - e.clientY, dt = Math.max(1, performance.now() - down.t0);
+        if (Math.abs(dy) >= Math.abs(dx)) { if (Math.abs(dy) > 40 || Math.abs(dy) / dt > .3) this.journeyGo(Math.sign(dy)); }
+        else if (Math.abs(dx) > 70) this.journeyGo(dx < 0 ? 1 : -1);
+        this.ring.dragging = false; down = null; return;
+      }
       if (down.grab) { this.desk.release(); this.ui.grab(false); }
       else if (!down.moved) this.click();
       else if (this.state === 'exhibit' && Math.abs(e.clientX - down.x) > 70) this.stepWork(e.clientX < down.x ? 1 : -1); // swipe
@@ -3368,7 +3393,7 @@ export class Museum {
       down = null;
     });
     let acc = 0, coolUntil = 0;
-    addEventListener('wheel', e => { if (this.journey?.on && !this.journey.off && !this.paused) this.journeyWheel(e.deltaMode === 1 ? e.deltaY * 30 : e.deltaY); }, { passive: true });
+    addEventListener('wheel', e => { if (this.journey?.on && !this.journey.off && !this.paused) this.journeyWheel(e.deltaMode === 1 ? e.deltaY * 30 : e.deltaY, e.timeStamp, e.momentum); }, { passive: true });
     c.addEventListener('wheel', e => {
       if (this.journey?.on) return;
       const now = performance.now();
@@ -3385,6 +3410,7 @@ export class Museum {
       if (this.journey?.on && !this.journey.off && !this.paused) {
         if (['ArrowUp', 'ArrowRight', 'PageDown', ' '].includes(k)) { e.preventDefault(); this.navStep(1); }   // up / right: forward
         if (['ArrowDown', 'ArrowLeft', 'PageUp'].includes(k)) { e.preventDefault(); this.navStep(-1); }       // down / left: back
+        if (k === 'Enter' && this.journey.seek == null && this.journey.s >= this.journey.total - .05) this.journeyEnd();   // at the heart: Enter goes in
         return;
       }
       if (k === 'Escape') { if (this.state === 'exhibit') this.closeExhibit(); else if (this.state === 'hall' || this.state === 'backroom') this.goRotunda(); }
@@ -3590,7 +3616,7 @@ export class Museum {
       this.hallsSeen.add(place); try { sessionStorage.setItem('ng-halls', JSON.stringify([...this.hallsSeen])); } catch (e) {}
       if (this.hallsSeen.size >= HALLS.length) this.openHeart();
     }
-    if (state === 'backroom') { this.openHeart(); this.loadCenterPiece(); }
+    if (state === 'backroom') { if (this.journey?.seek == null) this.openHeart(); this.loadCenterPiece(); }   // (gliding through: it opens on arrival, in updateJourney)
     this.state = state; this.place = place;
     this.ui.sound?.setPlace(place);
     this.ui.place(state, place, name, hint);
@@ -3625,7 +3651,8 @@ export class Museum {
   enterRotunda() { this.entered = true;
     if (this.heartOpen) this.ui.film?.preload(['in', 'hatch', 'spin', 'emerge']);
     this.setPlace('rotunda', 'rotunda', 'The Rotunda', 'drag, scroll or ← → to turn to a hall · ↑ to enter');
-    if (this.journey && !this.journey.on) { this.journey.on = true; this.journey.off = false; this.journey.s = this.journeyStartS ?? 0; this.journey.v = 0; }
+    if (this.journey && !this.journey.on) { this.journey.on = true; this.journey.off = false; this.journey.s = this.journeyStartS ?? 0; this.journey.v = 0;
+      this.journey.seek = null; this.journey.gv = 0; this.journey.gest = null; this.journey.arrived = performance.now(); }   // (back from the heart: no old target or half-used scroll left over)
     this.ring.focus = undefined; this.ring.focusHeart = undefined;
   }
 

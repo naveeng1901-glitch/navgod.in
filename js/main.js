@@ -421,8 +421,8 @@ $('#ac-enter').addEventListener('click', () => (museum.ring.h > .5 && !museum.he
 $('#to-heart').addEventListener('click', () => museum.enterHeart());
 $('#ac-heart').addEventListener('click', () => museum.toggleHeart());
 $('#ex-view').addEventListener('click', () => museum.currentWork && !CASE_SOON.has(museum.currentWork) && openWork(museum.currentWork));   // (Hall 04's case studies aren't made yet: the button does nothing for now)
-$('#ex-next').addEventListener('click', () => museum.journeyStep(1));
-$('#ex-prev').addEventListener('click', () => museum.journeyStep(-1));
+$('#ex-next').addEventListener('click', () => museum.journeyStep(1, true));
+$('#ex-prev').addEventListener('click', () => museum.journeyStep(-1, true));
 $('#pg-prev').addEventListener('click', () => museum.atBook?.turn(-1));
 // Hall 05's turntable: the picked record's song plays (once a song file is added in bank-hall.js RECORDS), only with sound on, the music paused under it
 let song = null;
