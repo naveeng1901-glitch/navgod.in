@@ -791,33 +791,69 @@ export class Museum {
     this.tape.position.y = Y; this.tape.renderOrder = 2; this.scene.add(this.tape);
   }
 
-  /* ---------- giant numbers painted on the floor before each arch (supergraphics) ---------- */
+  /* ---------- ink veins in the Rotunda floor (2026-11-25, his pick): the heart feeds every hall ----------
+     Red ink runs from CenterPiece across the terrazzo to each arch, branching as it goes, as if it had soaked into the stone.
+     One transparent picture on the floor, drawn once at startup: no lights, no extra draws per vein, nothing per frame.
+     Sharpness: 3072 px across the Rotunda on fast graphics cards, 2048 on built-in ones, 1536 on phones; full anisotropic filtering
+     keeps the lines crisp at the low angle you see the floor from. */
   buildFloorNumbers() {
+    const FR = ARC_R - .15, S = DEVICE.mobile ? 1536 : this.gpu?.tier === 'high' ? 3072 : 2048, px = S / (FR * 2);
+    let seed = 7; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+    const c = document.createElement('canvas'); c.width = c.height = S; const x = c.getContext('2d');
+    const P = (wx, wz) => [S / 2 + wx * px, S / 2 + wz * px];   // world x/z (metres from the heart) -> canvas
+    x.lineCap = 'round'; x.lineJoin = 'round';
+    // a vessel: a wandering line that tapers from w0 to w1 metres; returned as points so branches can grow from it
+    const vessel = (a0, r0, len, w0, w1, wander, step = .09) => {
+      const pts = []; let a = a0, r = r0, hx = Math.sin(a0), hz = Math.cos(a0), X = Math.sin(a0) * r0, Z = Math.cos(a0) * r0;
+      const n = Math.max(4, Math.round(len / step)), ph = rnd() * 10, ph2 = rnd() * 10;
+      for (let i = 0; i <= n; i++) {
+        const t = i / n, turn = (Math.sin(t * 7 + ph) * .55 + Math.sin(t * 19 + ph2) * .25) * wander;
+        const ca = Math.cos(turn * .06), sa = Math.sin(turn * .06); [hx, hz] = [hx * ca - hz * sa, hx * sa + hz * ca];
+        pts.push({ X, Z, w: lerp(w0, w1, Math.pow(t, .8)) * (1 + Math.sin(t * 31 + ph) * .12) });
+        X += hx * step; Z += hz * step;
+        if (Math.hypot(X, Z) > FR - .25) break;   // (never under the arcade)
+      }
+      return pts;
+    };
+    const all = [];
+    const grow = (pts, depth) => {
+      all.push(pts);
+      if (depth <= 0 || pts.length < 8) return;
+      const nb = Math.max(1, Math.round(pts.length / (depth === 2 ? 19 : 11)));
+      for (let i = 0; i < nb; i++) {
+        const k = Math.floor((.15 + .7 * (i + rnd() * .6) / nb) * (pts.length - 1)), p0 = pts[k], p1 = pts[Math.min(pts.length - 1, k + 1)];
+        const ang = Math.atan2(p1.X - p0.X, p1.Z - p0.Z) + (i % 2 ? 1 : -1) * (.45 + rnd() * .55);
+        const L = (pts.length - k) * .09 * (.35 + rnd() * .35);
+        const b = vessel(0, 0, L, p0.w * .62, .004, 1.6);
+        const dx = Math.sin(ang), dz = Math.cos(ang);   // re-aim the branch from the parent point along its own heading
+        let X = p0.X, Z = p0.Z; for (let j = 0; j < b.length; j++) { const t = j / Math.max(1, b.length - 1), wob = Math.sin(t * 9 + i) * .12 * t;
+          b[j].X = X + Math.cos(ang) * wob; b[j].Z = Z - Math.sin(ang) * wob; X += dx * .09; Z += dz * .09; }
+        grow(b.filter(q => Math.hypot(q.X, q.Z) < FR - .25), depth - 1);
+      }
+    };
     for (const h of [...HALLS, BACKROOM]) {
       const a = angleOf(h.k);
-      // a brass inlay set into the stone (2026-11-25, his pick): a ring, the number and the hall's name all in brass, cut slightly into the floor.
-      // Drawn once into the texture (light from the heart side), so it costs nothing per frame: no lights, no reflections.
-      const tex = textTexture((x, w, hh) => {
-        const cx = w / 2, cy = hh / 2, brass = (y0, y1) => { const g = x.createLinearGradient(0, y0, 0, y1);
-          g.addColorStop(0, '#f1d89a'); g.addColorStop(.35, '#c9a256'); g.addColorStop(.6, '#9b7432'); g.addColorStop(1, '#d6b46e'); return g; };
-        // the ring: a dark cut, then the brass, then a lit edge
-        x.lineWidth = w * .038; x.strokeStyle = 'rgba(40,28,14,.55)'; x.beginPath(); x.arc(cx, cy + 3, w * .445, 0, Math.PI * 2); x.stroke();
-        x.lineWidth = w * .03; x.strokeStyle = brass(cy - w * .47, cy + w * .47); x.beginPath(); x.arc(cx, cy, w * .445, 0, Math.PI * 2); x.stroke();
-        x.lineWidth = 2; x.strokeStyle = 'rgba(255,240,205,.7)'; x.beginPath(); x.arc(cx, cy, w * .432, Math.PI * 1.05, Math.PI * 1.95); x.stroke();
-        x.lineWidth = w * .006; x.strokeStyle = brass(cy - w * .4, cy + w * .4); x.beginPath(); x.arc(cx, cy, w * .395, 0, Math.PI * 2); x.stroke();
-        // the number and the name, inlaid: a dark cut under each letter, the brass on top
-        const inlay = (txt, font, y, track) => { x.font = font; x.textAlign = 'center'; x.letterSpacing = track;
-          x.fillStyle = 'rgba(40,28,14,.5)'; x.fillText(txt, cx, y + 4); x.fillStyle = brass(y - hh * .45, y + hh * .05); x.fillText(txt, cx, y); };
-        inlay(h === BACKROOM ? '06' : h.num, `800 ${hh * .46}px ${SANS}`, hh * .6, `${-hh * .02}px`);
-        inlay((h === BACKROOM ? 'blender & 3d' : h.title).toLowerCase(), `700 ${hh * .062}px ${SANS}`, hh * .74, `${hh * .004}px`);
-        x.letterSpacing = '0px';
-      }, 1024, 1024);
-      const m = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 3.4), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, opacity: .96 }));
-      m.rotation.x = -Math.PI / 2;
-      const g = new THREE.Group(); g.add(m); g.rotation.y = a + Math.PI;            // reads upright from the heart, looking out at the arch
-      g.position.copy(dir(a).multiplyScalar(9.6)).setY(.012); this.scene.add(g);
-      m.renderOrder = 3;
+      grow(vessel(a, CH_R + .1, FR - CH_R - .7, .085, .02, 1), 2);                 // the main vessel to the arch
+      grow(vessel(a + (rnd() - .5) * .35, CH_R + .1, (FR - CH_R) * .55, .035, .006, 2.2), 1);   // a thinner companion
     }
+    // each layer is drawn solid on its own sheet, then laid down with one opacity (overlapping see-through strokes made stripes at every joint)
+    const layer = (fn, alpha) => { const L = document.createElement('canvas'); L.width = L.height = S; const l = L.getContext('2d'); l.lineCap = l.lineJoin = 'round';
+      const keep = x; fn(l); x.globalAlpha = alpha; keep.drawImage(L, 0, 0); x.globalAlpha = 1; };
+    const strokeOn = (l, pts, widthK, style) => { l.strokeStyle = style;
+      for (let i = 1; i < pts.length; i++) { const [x0, y0] = P(pts[i - 1].X, pts[i - 1].Z), [x1, y1] = P(pts[i].X, pts[i].Z);
+        l.lineWidth = Math.max(.8, pts[i].w * px * widthK); l.beginPath(); l.moveTo(x0, y0); l.lineTo(x1, y1); l.stroke(); } };
+    // 1. the bleed: ink soaked sideways into the stone
+    layer(l => { l.shadowColor = '#b0200f'; l.shadowBlur = Math.max(4, .05 * px); for (const v of all) strokeOn(l, v, 1.9, '#b02016'); }, .18);
+    // 2. the ink itself
+    layer(l => { for (const v of all) strokeOn(l, v, 1, '#960c08'); }, .94);
+    // 3. a thin darker core where the ink pooled in the big vessels
+    layer(l => { for (const v of all) if (v[0].w > .03) strokeOn(l, v, .38, '#5c0806'); }, .7);
+    // the heart's rim: the ink gathers in a ring where the vessels leave it
+    x.strokeStyle = 'rgba(150,18,12,.85)'; x.lineWidth = .05 * px; x.beginPath(); x.arc(S / 2, S / 2, (CH_R + .12) * px, 0, Math.PI * 2); x.stroke();
+    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = this.renderer.capabilities.getMaxAnisotropy();
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(FR * 2, FR * 2), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, color: new THREE.Color(.95, .93, .92) }));
+    m.rotation.x = -Math.PI / 2; m.position.y = .012; m.renderOrder = 3; this.scene.add(m);
+    this.floorVeins = m;
   }
 
   /* ---------- the heart: CenterPiece chamber ---------- */
